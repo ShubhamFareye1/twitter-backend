@@ -9,6 +9,6 @@ public class Messages {
 //   private long messageId;
    private String text;
    private Date messageDate;
-   private long sender;
-   private long reciever;
+   private long senderId;
+   private long recieverId;
 }
