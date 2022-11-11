@@ -1,4 +1,4 @@
-package twitter;
+package com.groupC.twitter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TwitterApplication {
 
 	public static void main(String[] args) {
-		System.out.println("Welcome to twitter backend");
 		SpringApplication.run(TwitterApplication.class, args);
 	}
 

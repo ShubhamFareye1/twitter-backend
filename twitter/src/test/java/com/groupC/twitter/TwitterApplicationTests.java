@@ -1,4 +1,4 @@
-package twitter;
+package com.groupC.twitter;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
