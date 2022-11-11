@@ -6,4 +6,5 @@ import lombok.Data;
 public class Hashtag {
     private long hashtagId;
     private String name;
+//    private String details;
 }

@@ -4,6 +4,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.Date;
 
+enum role{USER,ADMIN}
+
 @Getter @Setter @NoArgsConstructor
 public class User {
 
@@ -20,5 +22,7 @@ public class User {
     private  Date createdAt;
 
     private Boolean isVerified;
+
+    private String role;
 
 }
