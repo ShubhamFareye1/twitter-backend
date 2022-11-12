@@ -39,10 +39,10 @@ public class User {
 //    @Column(unique = true) @Email
 //    private String email;
 
-    @Column(columnDefinition = "integer default 0",nullable = false)
+    @Column(columnDefinition = "integer default 0")
     private int numberOfFollower;
 
-    @Column(columnDefinition = "integer default 0",nullable = false)
+    @Column(columnDefinition = "integer default 0")
     private int numberOfFollowing;
 
     @ElementCollection
