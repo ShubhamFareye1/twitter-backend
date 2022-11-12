@@ -5,9 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -37,5 +35,8 @@ public class Comment {
     @OneToMany(mappedBy = "commentId", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Image> images = new ArrayList<>();
+
+    @ElementCollection
+    private Map<String, Date> imagess = new HashMap<>(4);
 
 }

@@ -2,6 +2,7 @@ package com.groupC.twitter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.ArrayList;
@@ -30,13 +31,13 @@ public class Tweet {
 
 //  private Date tweetedDate;
 
-    @CreatedDate
+    @CreationTimestamp
     private Date createdDate;
 
-    @Column(columnDefinition = "integer default 0",nullable = false)
+    @Column(columnDefinition = "integer default 0")
     private int numberOfLikes;
 
-    @Column(columnDefinition = "integer default 0",nullable = false)
+    @Column(columnDefinition = "integer default 0")
     private int numberOfRetweets;
 
 
@@ -75,6 +76,22 @@ public class Tweet {
     public long decrementRepostCount() {
         return (numberOfRetweets < 1) ? 0 : --numberOfRetweets;
     }
+
+
+//    private List<String> hashtags = new ArrayList<>();
+//
+//    private List<String> mentions = new ArrayList<>();
+
+
+    @ElementCollection
+    private Map<String, Date> hashtags = new HashMap<>();
+
+    @ElementCollection
+    private Map<String, Date> mentions = new HashMap<>();
+
+    @ElementCollection
+    private Map<String, Date> imagess = new HashMap<>(4);
+
 
 
 }
