@@ -15,12 +15,9 @@ public class TweetDto {
 
     private String text;
 
-    private Date tweetedDate;
-
+//    private Date tweetedDate;
     private Date createdDate;
-
     private int numberOFLikes;
-
     private int numberOFTweets;
 
 
