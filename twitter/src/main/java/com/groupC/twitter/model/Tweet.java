@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 import java.util.*;
 
@@ -25,7 +28,7 @@ public class Tweet {
     @Column(name = "content",nullable = false,length = 200)
     private String text;
 
-//    private Date tweetedDate;
+//  private Date tweetedDate;
 
     @CreatedDate
     private Date createdDate;
@@ -73,6 +76,9 @@ public class Tweet {
         return (numberOfRetweets < 1) ? 0 : --numberOfRetweets;
     }
 
+    private List<String> hashtags = new ArrayList<>();
+
+    private List<String> mentions = new ArrayList<>();
 
 
 }
