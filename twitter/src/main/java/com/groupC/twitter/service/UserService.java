@@ -1,29 +1,22 @@
 package com.groupC.twitter.service;
-
 import com.groupC.twitter.model.User;
-import com.groupC.twitter.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.jws.soap.SOAPBinding;
+import java.util.List;
 
-@Component
-public class UserService {
-    @Autowired
-    UserRepository userRepository;
+public interface UserService {
+    public User getUser(long userId);
+    public User getUserByUserName(String userName);
+    public void addUser(User user);
+    public void updateUser(User user);
+    public void deleteUser(long userId);
+    public void updateUserData(User user);
 
-    public User getUser(Long userId){
-        return userRepository.getReferenceById(userId);
-    }
-    public User getUserByUserName(String userName){
-        return userRepository.getReferenceByUserName(userName);
-    }
-    public void addUser(User user){
-        userRepository.save(user);
-    }
-    public void updateUser(User user){
-        userRepository.findById((user.getUserId()));
-        userRepository.save(user);
-    }
+    public boolean addFollower(long followerId, long userId);
+
+    public boolean removeFollower(long followerId, long userId);
+
+    public List<User> getFollowers(long userId);
+
+    public List<User> getFollowings(long userId);
 
 }
