@@ -76,9 +76,5 @@ public class Tweet {
         return (numberOfRetweets < 1) ? 0 : --numberOfRetweets;
     }
 
-    private List<String> hashtags = new ArrayList<>();
-
-    private List<String> mentions = new ArrayList<>();
-
 
 }
