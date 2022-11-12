@@ -1,23 +1,23 @@
 package com.groupC.twitter.model;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "bookmarks")
-public class Bookmark {
+@Table(name = "hashtagposts")
+public class Hashtagpost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long bookmarkId;
+    private long hashtagpostId;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = Hashtag.class)
     @JoinColumn(updatable = false,nullable = false)
-    private long userId;
+    private long hashtagId;
 
     @ManyToOne(targetEntity = Tweet.class)
     @JoinColumn(updatable = false,nullable = false)
     private long tweetId;
+
 }
