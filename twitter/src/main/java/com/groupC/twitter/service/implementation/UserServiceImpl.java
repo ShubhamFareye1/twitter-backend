@@ -1,7 +1,10 @@
 package com.groupC.twitter.service.implementation;
 
+import com.groupC.twitter.dto.BookmarkDto;
 import com.groupC.twitter.dto.UserDto;
+import com.groupC.twitter.model.Bookmark;
 import com.groupC.twitter.model.User;
+import com.groupC.twitter.repository.BookmarkRepository;
 import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -16,6 +19,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    BookmarkRepository bookmarkRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Override
@@ -84,6 +89,17 @@ public class UserServiceImpl implements UserService {
         List<UserDto> following = users.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
                 .collect(Collectors.toList());
         return following;
+    }
+    @Override
+    public List<BookmarkDto> getBookmarks(long userId){
+        List<Bookmark> bookmarks = bookmarkRepository.findByUserId(userId);
+        List<BookmarkDto> UserBookmarks = bookmarks.stream().map((bookmark) -> this.modelMapper.map(bookmark,BookmarkDto.class))
+                .collect(Collectors.toList());
+        return UserBookmarks;
+    }
+    @Override
+    public BookmarkDto addBookmark(BookmarkDto bookmarkDto){
+        return bookmarkDto;
     }
 
 

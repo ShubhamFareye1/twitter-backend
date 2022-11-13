@@ -72,7 +72,7 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public TweetDto addTweet(TweetDto tweetdto) {
 
-        this.userRepository.findById(tweetdto.getCreatedUser()).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
+        this.userRepository.findById(tweetdto.getCreatedUserId()).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
 
         List<Hashtagpost> hashtagposts = new ArrayList<>();
