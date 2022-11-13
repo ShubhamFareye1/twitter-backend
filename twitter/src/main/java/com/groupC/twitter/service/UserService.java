@@ -1,22 +1,17 @@
 package com.groupC.twitter.service;
+import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.User;
 
 import java.util.List;
 
 public interface UserService {
-    public User getUser(long userId);
-    public User getUserByUserName(String userName);
-    public void addUser(User user);
-    public void updateUser(User user);
+    public UserDto getUser(long userId);
+    public UserDto getUserByUserName(String userName);
+    public UserDto addUser(UserDto userDto);
+    public UserDto updateUser(UserDto userDto);
     public void deleteUser(long userId);
-    public void updateUserData(User user);
-
     public boolean addFollower(long followerId, long userId);
-
     public boolean removeFollower(long followerId, long userId);
-
-    public List<User> getFollowers(long userId);
-
-    public List<User> getFollowings(long userId);
-
+    public List<UserDto> getFollowers(long userId);
+    public List<UserDto> getFollowings(long userId);
 }

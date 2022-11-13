@@ -128,7 +128,7 @@ public class TweetServiceImpl implements TweetService {
     public List<TweetDto> getTweetsByUser(long userId) {
 
         this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
-        List<Tweet>tweets = this.tweetRepository.findByCreatedUser(userId);
+        List<Tweet>tweets = this.tweetRepository.findByCreatedUserId(userId);
 
         List<TweetDto> tweetDtos = tweets.stream().map((tweet)->this.modelMapper.map(tweet,TweetDto.class))
                 .collect(Collectors.toList());

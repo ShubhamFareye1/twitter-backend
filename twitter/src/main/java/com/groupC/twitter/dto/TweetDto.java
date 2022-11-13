@@ -12,7 +12,7 @@ public class TweetDto {
 
     private long postedUser;
 
-    private long createdUser;
+    private long createdUserId;
 
     private String text;
 

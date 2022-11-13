@@ -1,43 +1,51 @@
 package com.groupC.twitter.service.implementation;
 
+import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.User;
 import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
-
-
-
-    public User getUser(long userId){
-        return userRepository.getReferenceById(userId);
+    @Autowired
+    private ModelMapper modelMapper;
+    @Override
+    public UserDto getUser(long userId){
+        this.userRepository.findById(userId).orElseThrow(()->new NoSuchElementException(("This user Id Does not exist")));
+        User user = this.userRepository.findById(userId).get();
+        return this.modelMapper.map(user,UserDto.class);
     }
 
+    @Override
+    public UserDto getUserByUserName(String userName){
+        User user = this.userRepository.getReferenceByUserName(userName);
+        return this.modelMapper.map(user,UserDto.class);
+    }
+   
+    @Override
+    public UserDto addUser(UserDto userDto){
+        User user = this.modelMapper.map(userDto,User.class);
+        User newUser = this.userRepository.save(user);
+        return  this.modelMapper.map(newUser,UserDto.class);
+    }
 
-    public User getUserByUserName(String userName){
-        return userRepository.getReferenceByUserName(userName);
+    @Override
+    public UserDto updateUser(UserDto userDto){
+        User user = this.modelMapper.map(userDto,User.class);
+        User updateUser= this.userRepository.save(user);
+        return this.modelMapper.map(updateUser,UserDto.class);
     }
-    public void addUser(User user){
-        userRepository.save(user);
-    }
-    public void updateUser(User user){
-        userRepository.findById((user.getUserId()));
-        userRepository.save(user);
-    }
+    @Override
     public void deleteUser(long userId){userRepository.deleteById(userId);}
-
-    public void updateUserData(User user){
-        userRepository.findById(user.getUserId());
-        userRepository.save(user);
-    }
 
     @Override
     public boolean addFollower(long followerId, long userId) {
@@ -56,29 +64,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getFollowers(long userId) {
-        List<User> followers = new ArrayList<>();
-        User user = userRepository.getById(userId);
+    public List<UserDto> getFollowers(long userId) {
+        //List<User> users = (List<User>) this.userRepository.getReferenceById(userId);
+        //List<UserDto> followers = new ArrayList<>();
+        User user = userRepository.getReferenceById(userId);
         List<User> users = userRepository.findAllById(user.getFollower().keySet());
-        Optional.ofNullable(users)
-                .ifPresent(
-                        usersList ->
-                                usersList.forEach(eachUser -> followers.add(userMapper.transform(eachUser))));
+        List<UserDto> followers = users.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
+                .collect(Collectors.toList());
         return followers;
     }
 
+
     @Override
-    public List<User> getFollowings(long userId) {
-        List<User> followings = new ArrayList<>();
+    public List<UserDto> getFollowings(long userId) {
+        //List<User> users = (List<User>) this.userRepository.getReferenceById(userId);
+        //List<UserDto> followings = new ArrayList<>();
         User user = userRepository.getReferenceById(userId);
         List<User> users = userRepository.findAllById(user.getFollowing().keySet());
-        Optional.ofNullable(users)
-                .ifPresent(
-                        usersList ->
-                                usersList.forEach(eachUser -> followings.add(userMapper.transform(eachUser))));
-        return followings;
+        List<UserDto> following = users.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
+                .collect(Collectors.toList());
+        return following;
     }
-}
 
 
 }
