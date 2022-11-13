@@ -1,5 +1,6 @@
 package com.groupC.twitter.dto;
 
+import com.groupC.twitter.model.User;
 import lombok.Data;
 
 import javax.persistence.ElementCollection;
@@ -10,7 +11,7 @@ public class TweetDto {
 
     private long tweetId;
 
-    private long postedUser;
+    private long postedUserId;
 
     private long createdUserId;
 

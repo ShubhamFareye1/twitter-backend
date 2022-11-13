@@ -22,9 +22,11 @@ public class Tweet {
 
     private long postedUserId;
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(updatable = false,nullable = false)
     private long createdUserId;
+
+    @ManyToOne
+    @JoinColumn(updatable = false,nullable = false)
+    private User createdUser;
 
     @Column(name = "content",nullable = false,length = 200)
     private String text;
@@ -41,23 +43,23 @@ public class Tweet {
     private int numberOfRetweets;
 
 
-    @OneToMany(mappedBy = "tweetId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tweet",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tweetId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tweet",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Like> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tweetId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tweet",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tweetId", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Hashtagpost> hashtagposts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tweetId", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Image> images = new ArrayList<>();
 

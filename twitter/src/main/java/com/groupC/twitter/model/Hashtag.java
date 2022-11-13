@@ -20,7 +20,7 @@ public class Hashtag {
 
 //    private String details;
 
-    @OneToMany(mappedBy = "hashtagId", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Hashtagpost> hashtagposts = new ArrayList<>();
 }

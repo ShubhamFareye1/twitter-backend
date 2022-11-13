@@ -12,9 +12,14 @@ import com.groupC.twitter.service.TweetService;
 import com.groupC.twitter.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -41,56 +46,61 @@ public class TweetServiceImpl implements TweetService {
     @Autowired
     private LikeRepository likeRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     @Transactional
     public TweetDto addTweet(TweetDto tweetdto, Long userId) {
 
 //        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
-        userService.getUser(userId);
+        User user = userRepository.findById(userId).get();
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
-        tweet.setCreatedUserId(userId);
+        tweet.setCreatedUser(user);
         List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
-        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
-                .ifPresent(
-                        hashtags -> {
-                            hashtags.forEach(
-                                    hashtag -> {
-                                        Hashtagpost hashtagpost = new Hashtagpost();
-                                        hashtagpost.setTweetId(newTweet.getTweetId());
-                                        hashtagpost.setTweetId(hashtag.getHashtagId());
-                                        hashtagposts.add(hashtagpost);
-                                    }
-                            );
-                        }
-                );
-        hashtagPostRepository.saveAll(hashtagposts);
+//        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
+//                .ifPresent(
+//                        hashtags -> {
+//                            hashtags.forEach(
+//                                    hashtag -> {
+//                                        Hashtagpost hashtagpost = new Hashtagpost();
+//                                        hashtagpost.setTweetId(newTweet.getTweetId());
+//                                        hashtagpost.setTweetId(hashtag.getHashtagId());
+//                                        hashtagposts.add(hashtagpost);
+//                                    }
+//                            );
+//                        }
+//                );
+//        hashtagPostRepository.saveAll(hashtagposts);
         return this.modelMapper.map(newTweet,TweetDto.class);
 
     }
+
 
     @Override
     @Transactional
     public TweetDto addTweet(TweetDto tweetdto) {
 
-        userService.getUser(tweetdto.getCreatedUserId());
+        User user = userRepository.findById(tweetdto.getCreatedUserId()).get();
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
+        tweet.setCreatedUser(user);
         List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
-        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
-                .ifPresent(
-                        hashtags -> {
-                            hashtags.forEach(
-                                    hashtag -> {
-                                        Hashtagpost hashtagpost = new Hashtagpost();
-                                        hashtagpost.setTweetId(newTweet.getTweetId());
-                                        hashtagpost.setTweetId(hashtag.getHashtagId());
-                                        hashtagposts.add(hashtagpost);
-                                    }
-                            );
-                        }
-                );
-        hashtagPostRepository.saveAll(hashtagposts);
+//        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
+//                .ifPresent(
+//                        hashtags -> {
+//                            hashtags.forEach(
+//                                    hashtag -> {
+//                                        Hashtagpost hashtagpost = new Hashtagpost();
+//                                        hashtagpost.setTweetId(newTweet.getTweetId());
+//                                        hashtagpost.setTweetId(hashtag.getHashtagId());
+//                                        hashtagposts.add(hashtagpost);
+//                                    }
+//                            );
+//                        }
+//                );
+//        hashtagPostRepository.saveAll(hashtagposts);
         return this.modelMapper.map(newTweet,TweetDto.class);
     }
 
@@ -117,7 +127,10 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public List<TweetDto> getTweets() {
-        List<Tweet> tweets = this.tweetRepository.findAll();
+
+        Pageable p = PageRequest.of(0,25, Sort.by("tweetId").descending());
+        Page<Tweet> pagetweets = this.tweetRepository.findAll(p);
+        List<Tweet> tweets = pagetweets.getContent();
 
         List<TweetDto> tweetDtos = tweets.stream().map((tweet)->this.modelMapper.map(tweet,TweetDto.class))
                 .collect(Collectors.toList());
@@ -129,7 +142,7 @@ public class TweetServiceImpl implements TweetService {
 
 //        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         userService.getUser(userId);
-        List<Tweet>tweets = this.tweetRepository.findByCreatedUserId(userId);
+        List<Tweet>tweets = this.tweetRepository.findByCreatedUserIdOrderByTweetIdDesc(userId);
 
         List<TweetDto> tweetDtos = tweets.stream().map((tweet)->this.modelMapper.map(tweet,TweetDto.class))
                 .collect(Collectors.toList());
@@ -151,6 +164,14 @@ public class TweetServiceImpl implements TweetService {
                 }
         );
         return tweets;
+    }
+
+    @Override
+    public List<TweetDto> searchTweets(String keyword) {
+        List<Tweet> tweets = this.tweetRepository.searchByText("%"+keyword+"%");
+        List<TweetDto> tweetDtos = tweets.stream().map(tweet -> modelMapper.map(tweet,TweetDto.class))
+                .collect(Collectors.toList());
+        return tweetDtos;
     }
 
     @Override

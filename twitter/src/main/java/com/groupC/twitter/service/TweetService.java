@@ -25,6 +25,8 @@ public interface TweetService {
 
     public List<TweetDto> getFeeds(long userId);
 
+    public  List<TweetDto> searchTweets(String keyword);
+
     public int addLike(long tweetId, long userId);
 
     public  int removeLike(long tweetId, long userId);
