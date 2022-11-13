@@ -75,7 +75,6 @@ public class TweetServiceImpl implements TweetService {
 
         userService.getUser(tweetdto.getCreatedUserId());
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
-
         List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
         Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
