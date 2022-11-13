@@ -1,22 +1,29 @@
 package com.groupC.twitter.service.implementation;
 
 import com.groupC.twitter.dto.TweetDto;
+import com.groupC.twitter.model.Hashtagpost;
 import com.groupC.twitter.model.Tweet;
+import com.groupC.twitter.repository.HashtagPostRepository;
+import com.groupC.twitter.repository.HashtagRepository;
 import com.groupC.twitter.repository.TweetRepository;
 import com.groupC.twitter.repository.UserRepository;
+import com.groupC.twitter.service.HashtagService;
 import com.groupC.twitter.service.TweetService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TweetServiceImpl implements TweetService {
     @Autowired
-    TweetRepository tweetRepository;
+    private TweetRepository tweetRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -24,22 +31,66 @@ public class TweetServiceImpl implements TweetService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private HashtagRepository hashtagRepository;
+
+    @Autowired
+    private HashtagPostRepository hashtagPostRepository;
+
+    @Autowired
+    private HashtagService hashtagService;
+
     @Override
+    @Transactional
     public TweetDto addTweet(TweetDto tweetdto, Long userId) {
 
         this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
         tweet.setCreatedUserId(userId);
+        List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
+        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
+                .ifPresent(
+                        hashtags -> {
+                            hashtags.forEach(
+                                    hashtag -> {
+                                        Hashtagpost hashtagpost = new Hashtagpost();
+                                        hashtagpost.setTweetId(newTweet.getTweetId());
+                                        hashtagpost.setTweetId(hashtag.getHashtagId());
+                                        hashtagposts.add(hashtagpost);
+                                    }
+                            );
+                        }
+                );
+        hashtagPostRepository.saveAll(hashtagposts);
         return this.modelMapper.map(newTweet,TweetDto.class);
 
     }
 
 
     @Override
+    @Transactional
     public TweetDto addTweet(TweetDto tweetdto) {
+
+        this.userRepository.findById(tweetdto.getCreatedUser()).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
+
+        List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
+        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
+                .ifPresent(
+                        hashtags -> {
+                            hashtags.forEach(
+                                    hashtag -> {
+                                        Hashtagpost hashtagpost = new Hashtagpost();
+                                        hashtagpost.setTweetId(newTweet.getTweetId());
+                                        hashtagpost.setTweetId(hashtag.getHashtagId());
+                                        hashtagposts.add(hashtagpost);
+                                    }
+                            );
+                        }
+                );
+        hashtagPostRepository.saveAll(hashtagposts);
         return this.modelMapper.map(newTweet,TweetDto.class);
     }
 
@@ -50,6 +101,7 @@ public class TweetServiceImpl implements TweetService {
 
 
     @Override
+    @Transactional
     public void deleteTweet(Long tweetId) {
 
         this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));

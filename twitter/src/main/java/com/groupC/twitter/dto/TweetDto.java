@@ -2,7 +2,8 @@ package com.groupC.twitter.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import javax.persistence.ElementCollection;
+import java.util.*;
 
 @Data
 public class TweetDto {
@@ -19,7 +20,9 @@ public class TweetDto {
     private Date createdDate;
     private int numberOFLikes;
     private int numberOFTweets;
-
+    private List<String> hashtags = new ArrayList<>();
+    private List<String> mentions = new ArrayList<>();
+    private List<String> imagess = new ArrayList<>(4);
 
 
 }
