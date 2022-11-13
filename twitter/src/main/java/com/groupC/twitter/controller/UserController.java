@@ -1,5 +1,6 @@
 package com.groupC.twitter.controller;
 
+import com.groupC.twitter.dto.BookmarkDto;
 import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.Messages;
 import com.groupC.twitter.model.User;
@@ -33,8 +34,8 @@ public class UserController {
         return new ResponseEntity(userService.getUser(userId),HttpStatus.OK);
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity getUserByUserName(@PathVariable("userName") String userName){
+    @GetMapping("/username/{userName}")
+    public ResponseEntity getUserByUsername(@PathVariable("userName") String userName){
         return new ResponseEntity(userService.getUserByUserName(userName),HttpStatus.OK);
     }
 
@@ -43,18 +44,16 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
-//    @PutMapping("/{userId}/follow")
-//    public ResponseEntity<HttpStatus> addFollower(@PathVariable long userId, Principal principal) {
-//        userService.addFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
-//
-//    @DeleteMapping("/{userId}/follow")
-//    public ResponseEntity<HttpStatus> removeFollower(
-//            @PathVariable("userId") UUID userId, Principal principal) {
-//        userService.removeFollower(userId, UUID.randomUUID()); // TODO: Extract from Principal
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
+    @PutMapping("/follow/{userId}/{followerId}")
+    public ResponseEntity addFollower(@PathVariable("userId") long userId, @PathVariable("followerId") long followerId) {
+        return new ResponseEntity(userService.addFollower(userId, followerId),HttpStatus.OK);
+    }
+
+    @DeleteMapping("/follow/{userId}")
+    public ResponseEntity removeFollower(
+            @PathVariable("userId") long userId, @PathVariable("followerId") long followerId) {
+        return new ResponseEntity(userService.removeFollower(userId, followerId),HttpStatus.OK);
+    }
 
     @GetMapping("/{userId}/followers")
     public ResponseEntity getFollowers(@PathVariable("userId") long userId) {
@@ -65,5 +64,12 @@ public class UserController {
     public ResponseEntity getFollowings(@PathVariable("userId") long userId) {
         return new ResponseEntity(userService.getFollowings(userId),HttpStatus.OK);
     }
-
+    @PostMapping("/bookmark")
+    public ResponseEntity setBookmark(@RequestBody BookmarkDto bookmark){
+        return new ResponseEntity(userService.addBookmark(bookmark),HttpStatus.OK);
+    }
+    @GetMapping("/bookmark/{userId}")
+    public ResponseEntity getBookmark(@PathVariable("userId") long userId){
+        return new ResponseEntity(userService.getBookmarks(userId),HttpStatus.OK);
+    }
 }
