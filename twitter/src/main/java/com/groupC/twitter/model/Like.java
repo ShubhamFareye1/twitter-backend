@@ -13,13 +13,15 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long likeId;
 
+    private long tweetId;
+    private long userId;
     @ManyToOne(targetEntity = Tweet.class)
     @JoinColumn(updatable = false,nullable = false)
-    private long tweetId;
+    private Tweet tweet;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(updatable = false,nullable = false)
-    private long userId;
+    private User user;
 
 
 }

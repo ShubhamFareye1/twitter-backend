@@ -13,14 +13,16 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
    private long imageId;
 
-   private String imageUrl;
+    private String imageUrl;
+    private long tweetId;
+    private long commentId;
 
     @ManyToOne(targetEntity = Tweet.class)
     @JoinColumn
-    private long tweetId;
+    private Tweet tweet;
 
     @ManyToOne(targetEntity = Comment.class)
     @JoinColumn
-    private long commentId;
+    private Comment comment;
 
 }

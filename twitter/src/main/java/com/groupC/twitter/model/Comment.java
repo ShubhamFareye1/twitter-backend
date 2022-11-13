@@ -20,19 +20,21 @@ public class Comment {
     private String commentText;
 
     private long imageId;
+    private long userId;
+    private long tweetId;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(updatable = false,nullable = false)
-    private long userId;
+    private User user;
 
     @ManyToOne(targetEntity = Tweet.class)
     @JoinColumn(updatable = false,nullable = false)
-    private long tweetId;
+    private Tweet tweet;
 
     @CreatedDate
     private Date commentedAt;
 
-    @OneToMany(mappedBy = "commentId", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Image> images = new ArrayList<>();
 

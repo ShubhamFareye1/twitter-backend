@@ -20,11 +20,14 @@ public class Messages {
    @CreatedDate
    private Date messageDate;
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(updatable = false,nullable = false)
-   private long senderId;
+    private long senderId;
+    private long recieverId;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(updatable = false,nullable = false)
-   private long recieverId;
+   private User sender;
+
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(updatable = false,nullable = false)
+   private User reciever;
 }
