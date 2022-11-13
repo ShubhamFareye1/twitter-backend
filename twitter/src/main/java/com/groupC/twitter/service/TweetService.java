@@ -23,9 +23,11 @@ public interface TweetService {
 
     public List<TweetDto> getTweetsByUser(long userId);
 
-    public long addLike(long tweetId, long userId);
+    public List<TweetDto> getFeeds(long userId);
 
-    public  long removeLike(long tweetId, long userId);
+    public int addLike(long tweetId, long userId);
+
+    public  int removeLike(long tweetId, long userId);
 
 
 }

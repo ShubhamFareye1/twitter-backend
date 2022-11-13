@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
     BookmarkRepository bookmarkRepository;
     @Autowired
