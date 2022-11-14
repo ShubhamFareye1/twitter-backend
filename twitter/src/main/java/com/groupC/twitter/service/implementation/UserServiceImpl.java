@@ -2,6 +2,8 @@ package com.groupC.twitter.service.implementation;
 
 import com.groupC.twitter.dto.BookmarkDto;
 import com.groupC.twitter.dto.UserDto;
+import com.groupC.twitter.exceptions.UserNameAlredyExistException;
+import com.groupC.twitter.exceptions.UserNotFoundException;
 import com.groupC.twitter.model.Bookmark;
 import com.groupC.twitter.model.User;
 import com.groupC.twitter.repository.BookmarkRepository;
@@ -9,6 +11,7 @@ import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
     @Override
     public UserDto getUser(long userId){
-        this.userRepository.findById(userId).orElseThrow(()->new NoSuchElementException(("This user Id Does not exist")));
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.BAD_REQUEST,"User doesn't exist"));
         User user = this.userRepository.findById(userId).get();
         return this.modelMapper.map(user,UserDto.class);
     }
@@ -40,6 +43,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByUserName(String userName){
         User user = this.userRepository.getReferenceByUserName(userName);
+        if(user==null){
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist");
+        }
         return this.modelMapper.map(user,UserDto.class);
     }
    
@@ -47,6 +53,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto addUser(UserDto userDto){
         User user = this.modelMapper.map(userDto,User.class);
+        User user1 = userRepository.getReferenceByUserName(user.getUserName());
+        if(user1!=null){
+            throw new UserNameAlredyExistException(HttpStatus.BAD_REQUEST,"User already exist");
+        }
         User newUser = this.userRepository.save(user);
         return  this.modelMapper.map(newUser,UserDto.class);
     }
@@ -55,19 +65,23 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto updateUser(UserDto userDto){
         User user = this.modelMapper.map(userDto,User.class);
+        this.userRepository.findById(user.getUserId()).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User updateUser= this.userRepository.save(user);
         return this.modelMapper.map(updateUser,UserDto.class);
     }
     @Override
     @Transactional
     public void deleteUser(long userId){
-        getUser(userId);
+       // getUser(userId);
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         userRepository.deleteById(userId);
     }
 
     @Override
     @Transactional
     public boolean addFollower(long followerId, long userId) {
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
+        this.userRepository.findById(followerId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
         user.setFollower(followerId);
         user.setNumberOfFollower(user.getNumberOfFollower()+1);
@@ -78,6 +92,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean removeFollower(long followerId, long userId) {
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
+        this.userRepository.findById(followerId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
         user.removeFollower(followerId);
         user.setNumberOfFollower(user.getNumberOfFollower()-1);
@@ -88,6 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<UserDto> getFollowers(long userId) {
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
         List<User> users = userRepository.findAllById(user.getFollower().keySet());
         List<UserDto> followers = users.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
@@ -99,6 +116,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<UserDto> getFollowings(long userId) {
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
         List<User> users = userRepository.findAllById(user.getFollowing().keySet());
         List<UserDto> following = users.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
@@ -108,6 +126,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addFollowing(long userId, long followingId) {
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
+        this.userRepository.findById(followingId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
         user.setFollowing(followingId);
         user.setNumberOfFollowing(user.getNumberOfFollowing()+1);
@@ -118,6 +138,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteFollowing(long userId, long followingId) {
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
+        this.userRepository.findById(followingId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
         user.removeFollowing(followingId);
         user.setNumberOfFollowing(user.getNumberOfFollowing()-1);
@@ -126,6 +148,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<BookmarkDto> getBookmarks(long userId){
+        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         List<Bookmark> bookmarks = bookmarkRepository.findByUserId(userId);
         List<BookmarkDto> UserBookmarks = bookmarks.stream().map((bookmark) -> this.modelMapper.map(bookmark,BookmarkDto.class))
                 .collect(Collectors.toList());
