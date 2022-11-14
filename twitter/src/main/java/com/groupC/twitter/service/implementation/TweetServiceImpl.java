@@ -105,8 +105,14 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public void updateTweet(TweetDto tweet, Long tweetId) {
+    public TweetDto updateTweet(TweetDto tweetdto) {
 
+        User user = userRepository.findById(tweetdto.getCreatedUserId()).get();
+        Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
+        tweet.setCreatedUser(user);
+//        List<Hashtagpost> hashtagposts = new ArrayList<>();
+        Tweet newTweet = this.tweetRepository.save(tweet);
+        return this.modelMapper.map(newTweet,TweetDto.class);
     }
 
     @Override
@@ -123,6 +129,7 @@ public class TweetServiceImpl implements TweetService {
         this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
         Tweet tweet = this.tweetRepository.findById(tweetId).get();
         return this.modelMapper.map(tweet,TweetDto.class);
+
     }
 
     @Override
@@ -184,6 +191,8 @@ public class TweetServiceImpl implements TweetService {
         Like likeMapping = new Like();
         likeMapping.setTweetId(tweetId);
         likeMapping.setUserId(userId);
+        likeMapping.setUser(user);
+        likeMapping.setTweet(tweet);
         likeRepository.save(likeMapping);
         tweetRepository.save(tweet);
 
