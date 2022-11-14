@@ -21,13 +21,13 @@ public class tweetController {
         return new ResponseEntity(tweetService.getTweets(), HttpStatus.OK);
     }
 
-    @GetMapping("/tweets/{id}")
-    public ResponseEntity getTweet(@PathVariable("id") Long id){
+    @GetMapping("/tweets/{tweetId}")
+    public ResponseEntity getTweet(@PathVariable("tweetId") Long id){
         return new ResponseEntity(tweetService.getTweetById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/tweets")
-    public ResponseEntity getTweets(@PathVariable("id") Long id){
+    @GetMapping("/{userId}/tweets")
+    public ResponseEntity getTweets(@PathVariable("userId") Long id){
         return new ResponseEntity(tweetService.getTweetsByUser(id), HttpStatus.OK);
     }
 
@@ -36,13 +36,13 @@ public class tweetController {
         return new ResponseEntity(tweetService.addTweet(tweetDto),HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/tweets")
-    public ResponseEntity createTweet(@RequestBody TweetDto tweetDto,@PathVariable("id") Long id){
+    @PostMapping("/{userId}/tweets")
+    public ResponseEntity createTweet(@RequestBody TweetDto tweetDto,@PathVariable("userId") Long id){
         return new ResponseEntity(tweetService.addTweet(tweetDto,id),HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/tweets/{id}")
-    public ResponseEntity deleteTweet(@PathVariable("id") Long id){
+    @DeleteMapping("/tweets/{tweetId}")
+    public ResponseEntity deleteTweet(@PathVariable("tweetId") Long id){
         tweetService.deleteTweet(id);
         return new ResponseEntity<>("success deleted",HttpStatus.NO_CONTENT);
     }

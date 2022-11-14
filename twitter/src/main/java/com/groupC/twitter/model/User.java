@@ -1,6 +1,7 @@
 package com.groupC.twitter.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -27,7 +28,7 @@ public class User {
 
     private Date dob;
 
-    @CreatedDate
+    @CreationTimestamp
     private  Date createdAt;
 
     private Boolean isVerified;
