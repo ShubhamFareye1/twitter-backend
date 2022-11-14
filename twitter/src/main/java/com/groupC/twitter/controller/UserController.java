@@ -2,7 +2,7 @@ package com.groupC.twitter.controller;
 
 import com.groupC.twitter.dto.BookmarkDto;
 import com.groupC.twitter.dto.UserDto;
-import com.groupC.twitter.model.Messages;
+//import com.groupC.twitter.model.Messages;
 import com.groupC.twitter.model.User;
 import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.service.UserService;
@@ -39,9 +39,10 @@ public class UserController {
         return new ResponseEntity(userService.getUserByUserName(userName),HttpStatus.OK);
     }
 
-    @DeleteMapping("")
-    public void deleteUser(@PathVariable long userId){
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteUser(@PathVariable("id") long userId){
         userService.deleteUser(userId);
+        return new ResponseEntity("User Deleted Success Fully",HttpStatus.OK);
     }
 
     @PutMapping("/follow/{userId}/{followerId}")

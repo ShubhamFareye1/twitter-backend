@@ -142,7 +142,7 @@ public class TweetServiceImpl implements TweetService {
 
 //        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         userService.getUser(userId);
-        List<Tweet>tweets = this.tweetRepository.findByCreatedUserIdOrderByTweetIdDesc(userId);
+        List<Tweet>tweets = this.tweetRepository.findByCreatedUserIdOrderByCreatedDateDesc(userId);
 
         List<TweetDto> tweetDtos = tweets.stream().map((tweet)->this.modelMapper.map(tweet,TweetDto.class))
                 .collect(Collectors.toList());
@@ -199,7 +199,7 @@ public class TweetServiceImpl implements TweetService {
 
         likeRepository.deleteByUserIdAndTweetId(userId,tweetId);
         tweetRepository.save(tweet);
-        return 0;
+        return tweet.getNumberOfLikes();
     }
 
 }

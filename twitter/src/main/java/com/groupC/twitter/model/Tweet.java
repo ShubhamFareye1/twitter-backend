@@ -42,6 +42,8 @@ public class Tweet {
     @Column(columnDefinition = "integer default 0")
     private int numberOfRetweets;
 
+    private String image;
+
 
     @OneToMany(mappedBy = "tweet",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
@@ -59,9 +61,9 @@ public class Tweet {
     @JsonIgnore
     private List<Hashtagpost> hashtagposts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<Image> images = new ArrayList<>();
+//    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+//    @JsonIgnore
+//    private List<Image> images = new ArrayList<>();
 
     public long incrementLikeCount() {
         return ++numberOfLikes;
@@ -91,8 +93,6 @@ public class Tweet {
     @ElementCollection
     private Map<String, Date> mentions = new HashMap<>();
 
-    @ElementCollection
-    private Map<String, Date> imagess = new HashMap<>(4);
 
 
 
