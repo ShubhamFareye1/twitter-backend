@@ -2,10 +2,7 @@ package com.groupC.twitter.service.implementation;
 
 import com.groupC.twitter.dto.TweetDto;
 import com.groupC.twitter.dto.UserDto;
-import com.groupC.twitter.model.Hashtagpost;
-import com.groupC.twitter.model.Like;
-import com.groupC.twitter.model.Tweet;
-import com.groupC.twitter.model.User;
+import com.groupC.twitter.model.*;
 import com.groupC.twitter.repository.*;
 import com.groupC.twitter.service.HashtagService;
 import com.groupC.twitter.service.TweetService;
@@ -48,6 +45,9 @@ public class TweetServiceImpl implements TweetService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Override
     @Transactional
@@ -196,7 +196,11 @@ public class TweetServiceImpl implements TweetService {
         likeMapping.setTweet(tweet);
         likeRepository.save(likeMapping);
         tweetRepository.save(tweet);
-
+        Notification notification = new Notification();
+        notification.setMsg(user.getUserName() +" like your tweet");
+        notification.setUserId(tweet.getCreatedUserId());
+        notification.setUser(tweet.getCreatedUser());
+        notificationRepository.save(notification);
         return tweet.getNumberOfLikes();
     }
 
