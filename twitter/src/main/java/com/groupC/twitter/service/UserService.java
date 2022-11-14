@@ -27,4 +27,10 @@ public interface UserService {
 
     public BookmarkDto addBookmark(BookmarkDto bookmarkDto);
 
+    public void requestBluetick(long userId);
+
+    public List<UserDto> getRequestBluetick();
+
+    public boolean setBluetick(long userId);
+
 }
