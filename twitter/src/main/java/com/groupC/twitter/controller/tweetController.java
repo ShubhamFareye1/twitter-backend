@@ -47,4 +47,19 @@ public class tweetController {
         return new ResponseEntity<>("success deleted",HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/tweets/search/{keyword}")
+    public ResponseEntity searchTweets(@PathVariable("keyword") String keyword){
+        return new ResponseEntity(tweetService.searchTweets(keyword),HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/tweets/{tweetId}")
+    public ResponseEntity addLike(@PathVariable("userId") Long userId,@PathVariable("tweetId") Long tweetId){
+        return new ResponseEntity(tweetService.addLike(tweetId,userId),HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{userId}/tweets/{tweetId}")
+    public ResponseEntity removeLike(@PathVariable("userId") Long userId,@PathVariable("tweetId") Long tweetId){
+        return new ResponseEntity(tweetService.removeLike(tweetId,userId),HttpStatus.OK);
+    }
+
 }

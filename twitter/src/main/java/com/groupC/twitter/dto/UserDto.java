@@ -20,4 +20,6 @@ public class UserDto {
 
     private Boolean isVerified;
 
+    private String roles;
+
 }
