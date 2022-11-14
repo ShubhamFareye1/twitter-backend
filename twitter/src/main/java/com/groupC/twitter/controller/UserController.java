@@ -46,13 +46,13 @@ public class UserController {
 
     @PutMapping("/follow/{userId}/{followerId}")
     public ResponseEntity addFollower(@PathVariable("userId") long userId, @PathVariable("followerId") long followerId) {
-        return new ResponseEntity(userService.addFollower(userId, followerId),HttpStatus.OK);
+        return new ResponseEntity(userService.addFollower(followerId,userId),HttpStatus.OK);
     }
 
     @DeleteMapping("/follow/{userId}")
     public ResponseEntity removeFollower(
             @PathVariable("userId") long userId, @PathVariable("followerId") long followerId) {
-        return new ResponseEntity(userService.removeFollower(userId, followerId),HttpStatus.OK);
+        return new ResponseEntity(userService.removeFollower(followerId,userId),HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/followers")
