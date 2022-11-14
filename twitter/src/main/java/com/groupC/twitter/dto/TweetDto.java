@@ -17,13 +17,14 @@ public class TweetDto {
 
     private String text;
 
+    private String image;
+
 //    private Date tweetedDate;
     private Date createdDate;
     private int numberOFLikes;
     private int numberOFTweets;
     private List<String> hashtags = new ArrayList<>();
     private List<String> mentions = new ArrayList<>();
-    private List<String> imagess = new ArrayList<>(4);
 
 
 }

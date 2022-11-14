@@ -50,7 +50,10 @@ public class UserServiceImpl implements UserService {
         return this.modelMapper.map(updateUser,UserDto.class);
     }
     @Override
-    public void deleteUser(long userId){userRepository.deleteById(userId);}
+    public void deleteUser(long userId){
+        getUser(userId);
+        userRepository.deleteById(userId);
+    }
 
     @Override
     public boolean addFollower(long followerId, long userId) {

@@ -34,11 +34,13 @@ public class Comment {
     @CreatedDate
     private Date commentedAt;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<Image> images = new ArrayList<>();
+    private String image;
 
-    @ElementCollection
-    private Map<String, Date> imagess = new HashMap<>(4);
+//    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+//    @JsonIgnore
+//    private List<Image> images = new ArrayList<>();
+
+//    @ElementCollection
+//    private Map<String, Date> imagess = new HashMap<>(4);
 
 }

@@ -8,7 +8,7 @@ public class CommentDto {
 
     private String commentText;
 
-    private long imageId;
+    private String image;
 
     private long userId;
 
