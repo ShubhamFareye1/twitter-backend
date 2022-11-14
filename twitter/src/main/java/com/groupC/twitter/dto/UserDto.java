@@ -22,4 +22,10 @@ public class UserDto {
 
     private String roles;
 
+    private String avatar;
+
+    private int numberOfFollower;
+
+    private int numberOfFollowing;
+
 }
