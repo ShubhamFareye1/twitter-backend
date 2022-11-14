@@ -17,6 +17,10 @@ public interface UserService {
     public List<UserDto> getFollowers(long userId);
     public List<UserDto> getFollowings(long userId);
 
+    public boolean addFollowing(long userId,long followingId);
+
+    public boolean deleteFollowing(long userId,long followingId);
+
     public List<BookmarkDto> getBookmarks(long userId);
 
     public BookmarkDto addBookmark(BookmarkDto bookmarkDto);
