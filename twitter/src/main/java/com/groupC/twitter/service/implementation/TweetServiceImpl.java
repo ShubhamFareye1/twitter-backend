@@ -135,7 +135,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public List<TweetDto> getTweets() {
 
-        Pageable p = PageRequest.of(0,25, Sort.by("tweetId").descending());
+        Pageable p = PageRequest.of(0,80, Sort.by("tweetId").descending());
         Page<Tweet> pagetweets = this.tweetRepository.findAll(p);
         List<Tweet> tweets = pagetweets.getContent();
 
@@ -161,6 +161,7 @@ public class TweetServiceImpl implements TweetService {
         UserDto userDto = userService.getUser(userId);
 
         List<TweetDto> tweets = new ArrayList<>();
+        tweets.addAll(getTweetsByUser(userId));
         Optional.ofNullable(userService.getFollowers(userId)).ifPresent(
                 followers->{
                     followers.forEach(

@@ -23,6 +23,9 @@ public class TweetDto {
     private Date createdDate;
     private int numberOFLikes;
     private int numberOFTweets;
+
+    private User postedUser;
+    private User createdUser;
     private List<String> hashtags = new ArrayList<>();
     private List<String> mentions = new ArrayList<>();
 

@@ -23,20 +23,35 @@ class tweetControllerTest {
             ResponseEntity<TweetDto> res = restTemplate.exchange("http://localhost:8080/user/tweets/" + id, HttpMethod.GET, request, TweetDto.class);
             assertEquals(res.getStatusCode(), HttpStatus.OK);
         } catch (Exception e) {
-            assertEquals("404 : \"Wrong ID\"", e.getMessage());
+            assertEquals("400 : \"this Tweets ID does not exist\"", e.getMessage());
         }
     }
     @Test
     void getAllTweets(){
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/user/tweets", String.class);
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        int id = 1;
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/user/"+id+"/tweets", String.class);
+            assertEquals(response.getStatusCode(), HttpStatus.OK);
+        }catch (Exception e){
+
+        }
+    }
+
+    @Test
+    void getUserTweets(){
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:8080/user/tweets", String.class);
+            assertEquals(response.getStatusCode(), HttpStatus.OK);
+        }catch (Exception e){
+
+        }
     }
 
     @Test
     void postSingleTweet(){
         TweetDto tweetDto= new TweetDto();
         tweetDto.setText("TestController of Tweets with user 1");
-        tweetDto.setCreatedUserId(4);
+        tweetDto.setCreatedUserId(1);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<TweetDto> request = new HttpEntity<TweetDto>(tweetDto,headers);
@@ -44,10 +59,9 @@ class tweetControllerTest {
             ResponseEntity<TweetDto> res = restTemplate.exchange("http://localhost:8080/user/tweets", HttpMethod.POST, request, TweetDto.class);
             assertEquals(res.getStatusCode(), HttpStatus.CREATED);
         }catch (Exception e){
-//            assertEquals("404 : \"Wrong ID\"", e.getMessage());
+            assertEquals("404 : \"Wrong ID\"", e.getMessage());
         }
     }
-
     @Test
     void deleteTweetMap(){
         int id=2;
@@ -62,4 +76,6 @@ class tweetControllerTest {
             assertEquals("400 : \"this Tweets ID does not exist\"",e.getMessage());
         }
     }
+
+
 }

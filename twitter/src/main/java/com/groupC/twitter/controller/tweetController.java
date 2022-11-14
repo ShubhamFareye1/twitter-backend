@@ -32,10 +32,16 @@ public class tweetController {
         return new ResponseEntity(tweetService.getTweetsByUser(id), HttpStatus.OK);
     }
 
+    @GetMapping("/{userId}/feeds")
+    public ResponseEntity getFeeds(@PathVariable("userId") Long id){
+        return new ResponseEntity(tweetService.getFeeds(id),HttpStatus.OK);
+    }
+
     @PostMapping("/tweets")
     public ResponseEntity createTweet(@RequestBody TweetDto tweetDto){
         return new ResponseEntity(tweetService.addTweet(tweetDto),HttpStatus.CREATED);
     }
+
 
     @PostMapping("/{userId}/tweets")
     public ResponseEntity createTweet(@RequestBody TweetDto tweetDto,@PathVariable("userId") Long id){
