@@ -4,6 +4,8 @@ import com.groupC.twitter.dto.CommentDto;
 import com.groupC.twitter.model.Comment;
 import com.groupC.twitter.repository.CommentRepository;
 import com.groupC.twitter.repository.LikeRepository;
+import com.groupC.twitter.repository.TweetRepository;
+import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.service.CommentService;
 import com.groupC.twitter.service.TweetService;
 import com.groupC.twitter.service.UserService;
@@ -26,9 +28,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TweetRepository tweetRepository;
+
 
     @Override
     public List<CommentDto> getTweetsCommets(long tweetId) {
@@ -50,6 +58,10 @@ public class CommentServiceImpl implements CommentService {
         tweetService.getTweetById(commentDto.getTweetId());
         userService.getUser(commentDto.getUserId());
         Comment comment = modelMapper.map(commentDto,Comment.class);
-        return modelMapper.map(commentRepository.save(comment), CommentDto.class);
+        comment.setUser(userRepository.getReferenceById(commentDto.getUserId()));
+        comment.setTweet(tweetRepository.getReferenceById(commentDto.getTweetId()));
+        Comment newComment = commentRepository.save(comment);
+        CommentDto newCommentDto= modelMapper.map(newComment, CommentDto.class);
+        return newCommentDto;
     }
 }

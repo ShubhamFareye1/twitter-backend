@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/user/tweets")
+@RestController
+@RequestMapping("/user/tweets")
+@CrossOrigin
 public class CommentController {
 
     @Autowired
@@ -19,7 +21,7 @@ public class CommentController {
         return new ResponseEntity(commentService.getTweetsCommets(id), HttpStatus.OK);
     }
 
-    @DeleteMapping("comments/{id}")
+    @DeleteMapping("/comments/{id}")
     public ResponseEntity deleteComment(@PathVariable("id") Long id){
         commentService.deleteComment(id);
         return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
