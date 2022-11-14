@@ -53,7 +53,7 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public TweetDto addTweet(TweetDto tweetdto, Long userId) {
 
-//        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
+        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         User user = userRepository.findById(userId).get();
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
         tweet.setCreatedUser(user);
@@ -83,6 +83,7 @@ public class TweetServiceImpl implements TweetService {
     public TweetDto addTweet(TweetDto tweetdto) {
 
         User user = userRepository.findById(tweetdto.getCreatedUserId()).get();
+        this.userRepository.findById(user.getUserId()).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
         tweet.setCreatedUser(user);
         List<Hashtagpost> hashtagposts = new ArrayList<>();
@@ -147,10 +148,9 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public List<TweetDto> getTweetsByUser(long userId) {
 
-//        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
+        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
         userService.getUser(userId);
         List<Tweet>tweets = this.tweetRepository.findByCreatedUserIdOrderByCreatedDateDesc(userId);
-
         List<TweetDto> tweetDtos = tweets.stream().map((tweet)->this.modelMapper.map(tweet,TweetDto.class))
                 .collect(Collectors.toList());
         return tweetDtos;
@@ -185,6 +185,7 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public int addLike(long tweetId, long userId) {
         Tweet tweet = this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
+        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
         tweet.incrementLikeCount();
         User user = modelMapper.map(userService.getUser(userId),User.class);
 
@@ -203,6 +204,7 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public int removeLike(long tweetId, long userId) {
         Tweet tweet = this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
+        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
         tweet.decrementLikeCount();
         User user = modelMapper.map(userService.getUser(userId),User.class);
 
