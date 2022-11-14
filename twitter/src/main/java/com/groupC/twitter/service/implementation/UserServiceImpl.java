@@ -10,6 +10,7 @@ import com.groupC.twitter.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,12 +32,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(user -> modelMapper.map(user,UserDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
     public UserDto getUserByUserName(String userName){
         User user = this.userRepository.getReferenceByUserName(userName);
         return this.modelMapper.map(user,UserDto.class);
     }
    
     @Override
+    @Transactional
     public UserDto addUser(UserDto userDto){
         User user = this.modelMapper.map(userDto,User.class);
         User newUser = this.userRepository.save(user);
@@ -44,18 +52,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(UserDto userDto){
         User user = this.modelMapper.map(userDto,User.class);
         User updateUser= this.userRepository.save(user);
         return this.modelMapper.map(updateUser,UserDto.class);
     }
     @Override
+    @Transactional
     public void deleteUser(long userId){
         getUser(userId);
         userRepository.deleteById(userId);
     }
 
     @Override
+    @Transactional
     public boolean addFollower(long followerId, long userId) {
         User user = userRepository.getReferenceById(userId);
         user.setFollower(followerId);
@@ -64,6 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean removeFollower(long followerId, long userId) {
         User user = userRepository.getReferenceById(userId);
         user.removeFollower(followerId);
@@ -72,6 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<UserDto> getFollowers(long userId) {
         //List<User> users = (List<User>) this.userRepository.getReferenceById(userId);
         //List<UserDto> followers = new ArrayList<>();
@@ -84,6 +97,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public List<UserDto> getFollowings(long userId) {
         //List<User> users = (List<User>) this.userRepository.getReferenceById(userId);
         //List<UserDto> followings = new ArrayList<>();
@@ -101,6 +115,7 @@ public class UserServiceImpl implements UserService {
         return UserBookmarks;
     }
     @Override
+    @Transactional
     public BookmarkDto addBookmark(BookmarkDto bookmarkDto){
         return bookmarkDto;
     }
