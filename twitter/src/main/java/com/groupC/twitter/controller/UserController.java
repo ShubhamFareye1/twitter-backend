@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -74,7 +75,7 @@ public class UserController {
         return new ResponseEntity(userService.getFollowings(userId),HttpStatus.OK);
     }
 
-    @PostMapping("/following/{userId}/{followingID}")
+    @PostMapping("/following/{userId}/{followingId}")
     public ResponseEntity addFollowing(@PathVariable("userId") long userId,@PathVariable("followingId") long followingId){
         return new ResponseEntity(userService.addFollowing(userId,followingId),HttpStatus.OK);
     }

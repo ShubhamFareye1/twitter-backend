@@ -13,7 +13,7 @@ public interface TweetService {
 
  public TweetDto addTweet(TweetDto tweetdto);
 
-    public void updateTweet(TweetDto tweet, Long tweetId);
+    public TweetDto updateTweet(TweetDto tweet);
 
     public void deleteTweet(Long tweetId);
 
