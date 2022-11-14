@@ -55,12 +55,15 @@ public class UserController {
         return new ResponseEntity(userService.addFollower(followerId,userId),HttpStatus.OK);
     }
 
-    @DeleteMapping("/follow/{userId}")
+    @DeleteMapping("/follow/{userId}/{followerId}")
     public ResponseEntity removeFollower(
             @PathVariable("userId") long userId, @PathVariable("followerId") long followerId) {
         return new ResponseEntity(userService.removeFollower(followerId,userId),HttpStatus.OK);
     }
-
+    @DeleteMapping("/following/{userId}/{followingId}")
+    public ResponseEntity removeFollowing(@PathVariable("userId") long userId,@PathVariable("followingId") long followingId){
+        return new ResponseEntity(userService.deleteFollowing(userId,followingId),HttpStatus.OK);
+    }
     @GetMapping("/{userId}/followers")
     public ResponseEntity getFollowers(@PathVariable("userId") long userId) {
         return new ResponseEntity(userService.getFollowers(userId),HttpStatus.OK);
@@ -69,6 +72,11 @@ public class UserController {
     @GetMapping("/{userId}/followings")
     public ResponseEntity getFollowings(@PathVariable("userId") long userId) {
         return new ResponseEntity(userService.getFollowings(userId),HttpStatus.OK);
+    }
+
+    @PostMapping("/following/{userId}/{followingID}")
+    public ResponseEntity addFollowing(@PathVariable("userId") long userId,@PathVariable("followingId") long followingId){
+        return new ResponseEntity(userService.addFollowing(userId,followingId),HttpStatus.OK);
     }
     @PostMapping("/bookmark")
     public ResponseEntity setBookmark(@RequestBody BookmarkDto bookmark){

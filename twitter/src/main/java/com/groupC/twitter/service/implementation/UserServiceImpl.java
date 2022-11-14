@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
     public boolean addFollower(long followerId, long userId) {
         User user = userRepository.getReferenceById(userId);
         user.setFollower(followerId);
+        user.setNumberOfFollower(user.getNumberOfFollower()+1);
         userRepository.save(user);
         return true;
     }
@@ -79,6 +80,7 @@ public class UserServiceImpl implements UserService {
     public boolean removeFollower(long followerId, long userId) {
         User user = userRepository.getReferenceById(userId);
         user.removeFollower(followerId);
+        user.setNumberOfFollower(user.getNumberOfFollower()-1);
         userRepository.save(user);
         return true;
     }
@@ -86,8 +88,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<UserDto> getFollowers(long userId) {
-        //List<User> users = (List<User>) this.userRepository.getReferenceById(userId);
-        //List<UserDto> followers = new ArrayList<>();
         User user = userRepository.getReferenceById(userId);
         List<User> users = userRepository.findAllById(user.getFollower().keySet());
         List<UserDto> followers = users.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
@@ -99,14 +99,31 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<UserDto> getFollowings(long userId) {
-        //List<User> users = (List<User>) this.userRepository.getReferenceById(userId);
-        //List<UserDto> followings = new ArrayList<>();
         User user = userRepository.getReferenceById(userId);
         List<User> users = userRepository.findAllById(user.getFollowing().keySet());
         List<UserDto> following = users.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
                 .collect(Collectors.toList());
         return following;
     }
+
+    @Override
+    public boolean addFollowing(long userId, long followingId) {
+        User user = userRepository.getReferenceById(userId);
+        user.setFollowing(followingId);
+        user.setNumberOfFollowing(user.getNumberOfFollowing()+1);
+        userRepository.save(user);
+        return addFollower(userId,followingId);
+
+    }
+
+    @Override
+    public boolean deleteFollowing(long userId, long followingId) {
+        User user = userRepository.getReferenceById(userId);
+        user.removeFollowing(followingId);
+        user.setNumberOfFollowing(user.getNumberOfFollowing()-1);
+        return removeFollower(userId,followingId);
+    }
+
     @Override
     public List<BookmarkDto> getBookmarks(long userId){
         List<Bookmark> bookmarks = bookmarkRepository.findByUserId(userId);
