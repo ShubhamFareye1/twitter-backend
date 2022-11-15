@@ -23,6 +23,7 @@ public class TweetDto {
     private Date createdDate;
     private int numberOFLikes;
     private int numberOFTweets;
+    private int numberOfComments;
 
     private User postedUser;
     private User createdUser;

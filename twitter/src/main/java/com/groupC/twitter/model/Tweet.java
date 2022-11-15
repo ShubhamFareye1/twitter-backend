@@ -3,6 +3,7 @@ package com.groupC.twitter.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.ArrayList;
@@ -28,6 +29,10 @@ public class Tweet {
     @JoinColumn(updatable = false,nullable = false)
     private User createdUser;
 
+    @ManyToOne
+    @JoinColumn(nullable = true)
+    private User postedUser;
+
     @Column(name = "content",nullable = false,length = 200)
     private String text;
 
@@ -35,9 +40,11 @@ public class Tweet {
 
     @CreationTimestamp
     private Date createdDate;
-
     @Column(columnDefinition = "integer default 0")
     private int numberOfLikes;
+
+    @Column(columnDefinition = "integer default 0")
+    private int numberOfComments;
 
     @Column(columnDefinition = "integer default 0")
     private int numberOfRetweets;
@@ -61,10 +68,6 @@ public class Tweet {
     @JsonIgnore
     private List<Hashtagpost> hashtagposts = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-//    @JsonIgnore
-//    private List<Image> images = new ArrayList<>();
-
     public long incrementLikeCount() {
         return ++numberOfLikes;
     }
@@ -81,11 +84,12 @@ public class Tweet {
         return (numberOfRetweets < 1) ? 0 : --numberOfRetweets;
     }
 
-
-//    private List<String> hashtags = new ArrayList<>();
-//
-//    private List<String> mentions = new ArrayList<>();
-
+    public long incrementCommentCount() {
+        return ++numberOfComments;
+    }
+    public long decrementCommentCount() {
+        return (numberOfComments < 1) ? 0 : --numberOfComments;
+    }
 
     @ElementCollection
     private Map<String, Date> hashtags = new HashMap<>();

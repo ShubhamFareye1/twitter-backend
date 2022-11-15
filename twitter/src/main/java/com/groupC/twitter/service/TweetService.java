@@ -9,9 +9,11 @@ import java.util.List;
 public interface TweetService {
 
 
- TweetDto addTweet(TweetDto tweetdto, Long userId);
+ public TweetDto addTweet(TweetDto tweetdto, Long userId);
 
  public TweetDto addTweet(TweetDto tweetdto);
+
+ public TweetDto reTweet(TweetDto tweetDto, Long userId);
 
     public TweetDto updateTweet(TweetDto tweet);
 

@@ -4,6 +4,11 @@ import com.groupC.twitter.dto.CommentDto;
 import com.groupC.twitter.dto.TweetDto;
 import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.Comment;
+import com.groupC.twitter.model.Tweet;
+import com.groupC.twitter.repository.CommentRepository;
+import com.groupC.twitter.repository.LikeRepository;
+import com.groupC.twitter.repository.TweetRepository;
+import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.model.Notification;
 import com.groupC.twitter.repository.*;
 import com.groupC.twitter.service.CommentService;
@@ -54,18 +59,25 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteComment(Long commentId) {
-        commentRepository.findById(commentId).orElseThrow(()->new NoSuchElementException("This Comment ID does not exit"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new NoSuchElementException("This Comment ID does not exit"));
+        Tweet tweet = tweetRepository.findById(comment.getTweetId()).get();
+        tweet.decrementCommentCount();
+        tweetRepository.save(tweet);
         commentRepository.deleteById(commentId);
     }
 
     @Override
     @Transactional
     public CommentDto addComment(CommentDto commentDto) {
+        tweetService.getTweetById(commentDto.getTweetId());
+        userService.getUser(commentDto.getUserId());
+        Tweet tweet = tweetRepository.getReferenceById(commentDto.getTweetId());
         TweetDto tweetDto=tweetService.getTweetById(commentDto.getTweetId());
         UserDto userDto = userService.getUser(commentDto.getUserId());
         Comment comment = modelMapper.map(commentDto,Comment.class);
         comment.setUser(userRepository.getReferenceById(commentDto.getUserId()));
-        comment.setTweet(tweetRepository.getReferenceById(commentDto.getTweetId()));
+        tweet.incrementCommentCount();
+        comment.setTweet(tweetRepository.save(tweet));
         Comment newComment = commentRepository.save(comment);
         CommentDto newCommentDto= modelMapper.map(newComment, CommentDto.class);
         Notification notification = new Notification();
