@@ -5,8 +5,10 @@ import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.exceptions.UserNameAlredyExistException;
 import com.groupC.twitter.exceptions.UserNotFoundException;
 import com.groupC.twitter.model.Bookmark;
+import com.groupC.twitter.model.Tweet;
 import com.groupC.twitter.model.User;
 import com.groupC.twitter.repository.BookmarkRepository;
+import com.groupC.twitter.repository.TweetRepository;
 import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     BookmarkRepository bookmarkRepository;
+
+    @Autowired
+    private TweetRepository tweetRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Override
@@ -156,7 +162,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public BookmarkDto addBookmark(BookmarkDto bookmarkDto){
-        return bookmarkDto;
+        Bookmark bookmark = modelMapper.map(bookmarkDto,Bookmark.class);
+        User user=this.userRepository.findById(bookmarkDto.getUserId()).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
+        Tweet tweet = this.tweetRepository.findById(bookmarkDto.getTweetId()).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
+        bookmark.setUser(user);
+        bookmark.setTweet(tweet);
+        bookmarkRepository.save(bookmark);
+        return modelMapper.map(bookmark,BookmarkDto.class);
     }
 
     @Override

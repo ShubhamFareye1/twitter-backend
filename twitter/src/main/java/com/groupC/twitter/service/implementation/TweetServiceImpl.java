@@ -3,6 +3,7 @@ package com.groupC.twitter.service.implementation;
 import com.groupC.twitter.dto.TweetDto;
 import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.exceptions.UserNameAlredyExistException;
+import com.groupC.twitter.exceptions.UserNotFoundException;
 import com.groupC.twitter.model.*;
 import com.groupC.twitter.repository.*;
 import com.groupC.twitter.service.HashtagService;
@@ -18,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,8 +52,8 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public TweetDto addTweet(TweetDto tweetdto, Long userId) {
 
-        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
-        User user = userRepository.findById(userId).get();
+
+        User user=this.userRepository.findById(tweetdto.getCreatedUserId()).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
         tweet.setPostedUserId(userId);
         tweet.setCreatedUser(user);
@@ -83,8 +83,7 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public TweetDto addTweet(TweetDto tweetdto) {
 
-        User user = userRepository.findById(tweetdto.getCreatedUserId()).get();
-        this.userRepository.findById(user.getUserId()).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
+        User user=this.userRepository.findById(tweetdto.getCreatedUserId()).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
         tweet.setPostedUserId(tweetdto.getCreatedUserId());
         tweet.setCreatedUser(user);
@@ -110,8 +109,10 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     @Transactional
-    public TweetDto reTweet(TweetDto tweetdto, Long userId) {
-        User user = userRepository.findById(userId).get();
+    public TweetDto reTweet(Long userId, Long tweetId) {
+
+        User user=this.userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
+        TweetDto tweetdto = getTweetById(tweetId);
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
         tweet.setTweetId(0);
         tweet.setPostedUserId(userId);
@@ -206,9 +207,9 @@ public class TweetServiceImpl implements TweetService {
         Tweet tweet = this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
         this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
         Like like = this.likeRepository.findByUserId(userId);
-        if(like.getLikeId()>0){
-            throw new UserNameAlredyExistException( HttpStatus.BAD_REQUEST,"You're already like this post before");
-        }
+//        if(like.getLikeId()>0){
+//            throw new UserNameAlredyExistException( HttpStatus.BAD_REQUEST,"You're already like this post before");
+//        }
         tweet.incrementLikeCount();
         User user = modelMapper.map(userService.getUser(userId),User.class);
         Like likeMapping = new Like();
