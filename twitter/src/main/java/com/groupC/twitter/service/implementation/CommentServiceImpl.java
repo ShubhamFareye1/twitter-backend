@@ -1,12 +1,16 @@
 package com.groupC.twitter.service.implementation;
 
 import com.groupC.twitter.dto.CommentDto;
+import com.groupC.twitter.dto.TweetDto;
+import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.Comment;
 import com.groupC.twitter.model.Tweet;
 import com.groupC.twitter.repository.CommentRepository;
 import com.groupC.twitter.repository.LikeRepository;
 import com.groupC.twitter.repository.TweetRepository;
 import com.groupC.twitter.repository.UserRepository;
+import com.groupC.twitter.model.Notification;
+import com.groupC.twitter.repository.*;
 import com.groupC.twitter.service.CommentService;
 import com.groupC.twitter.service.TweetService;
 import com.groupC.twitter.service.UserService;
@@ -39,6 +43,9 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private TweetRepository tweetRepository;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
 
     @Override
     public List<CommentDto> getTweetsCommets(long tweetId) {
@@ -65,12 +72,19 @@ public class CommentServiceImpl implements CommentService {
         tweetService.getTweetById(commentDto.getTweetId());
         userService.getUser(commentDto.getUserId());
         Tweet tweet = tweetRepository.getReferenceById(commentDto.getTweetId());
+        TweetDto tweetDto=tweetService.getTweetById(commentDto.getTweetId());
+        UserDto userDto = userService.getUser(commentDto.getUserId());
         Comment comment = modelMapper.map(commentDto,Comment.class);
         comment.setUser(userRepository.getReferenceById(commentDto.getUserId()));
         tweet.incrementCommentCount();
         comment.setTweet(tweetRepository.save(tweet));
         Comment newComment = commentRepository.save(comment);
         CommentDto newCommentDto= modelMapper.map(newComment, CommentDto.class);
+        Notification notification = new Notification();
+        notification.setMsg(userDto.getUserName() +" comment on your tweet");
+        notification.setUserId(tweetDto.getCreatedUserId());
+        //notification.setUser(tweetDto.getCreatedUser());
+        notificationRepository.save(notification);
         return newCommentDto;
     }
 }

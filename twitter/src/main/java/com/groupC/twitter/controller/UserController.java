@@ -2,6 +2,8 @@ package com.groupC.twitter.controller;
 
 import com.groupC.twitter.dto.BookmarkDto;
 import com.groupC.twitter.dto.UserDto;
+import com.groupC.twitter.repository.NotificationRepository;
+import com.groupC.twitter.service.NotificationService;
 import com.groupC.twitter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    NotificationService notificationService;
     @PostMapping("")
     public ResponseEntity signup(@RequestBody UserDto user){
         return new ResponseEntity(userService.addUser(user), HttpStatus.OK);
@@ -82,5 +86,22 @@ public class UserController {
     @GetMapping("/bookmark/{userId}")
     public ResponseEntity getBookmark(@PathVariable("userId") long userId){
         return new ResponseEntity(userService.getBookmarks(userId),HttpStatus.OK);
+    }
+    @PutMapping("/bluetick/{userId}")
+    public ResponseEntity requestBluetick(@PathVariable("userId") long userId){
+        userService.requestBluetick(userId);
+        return new ResponseEntity("Blue tick requested",HttpStatus.OK);
+    }
+    @GetMapping("/bluetick")
+    public ResponseEntity bluetickRequest(){
+        return new ResponseEntity(userService.getRequestBluetick(),HttpStatus.OK);
+    }
+    @PutMapping("/bluetick")
+    public ResponseEntity bluetick(@PathVariable("userId") long userId){
+        return new ResponseEntity(userService.setBluetick(userId),HttpStatus.OK);
+    }
+    @GetMapping("/notification/{userId}")
+    public ResponseEntity notification(@PathVariable("userId") long userId){
+        return new ResponseEntity(notificationService.getNotification(userId),HttpStatus.OK);
     }
 }

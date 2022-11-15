@@ -18,7 +18,7 @@ public class UserDto {
 
     private  Date createdAt;
 
-    private Boolean isVerified;
+    private Integer isVerified;
 
     private String roles;
 

@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.util.*;
 
 enum Role{USER,ADMIN}
-
 @Data
 @Entity
 @Table(name="users")
@@ -28,8 +27,11 @@ public class User {
 
     @CreationTimestamp
     private  Date createdAt;
+//    @Column(columnDefinition = "integer default 1")
 
-    private Boolean isVerified;
+    @Column(columnDefinition = "integer default 1")
+    private Integer isVerified;
+
 
     private Role roles;
 
@@ -47,6 +49,7 @@ public class User {
     @ElementCollection
     private Map<Long, Date> following = new HashMap<>();
 
+
     @OneToMany(mappedBy = "createdUser",cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonIgnore
     private List<Tweet> tweets = new ArrayList<>();
@@ -62,6 +65,10 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Notification> notifications = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "sender",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 //    @JsonIgnore
