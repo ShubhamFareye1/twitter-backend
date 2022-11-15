@@ -34,26 +34,20 @@ public class WebSecurityConfig {
 
         return new UserDetailsService() {
 
-//            @Autowired
-//            private UserRepository userRepository;
+            @Autowired
+            private UserRepository userRepository;
+
 
             @Override
             public UserDetails loadUserByUsername(String username){
 
+                com.groupC.twitter.model.User requestUser = userRepository.getReferenceByUserName(username);
 
-//                com.fareye.training.model.User requestUser = this.userRepository.findByFirstname(username).get();
-
-                UserDetails user = User.withUsername("foo")
-                        .password(passwordEncoder.encode("bar"))
-                        .roles("ADMIN")
+                UserDetails user = User.withUsername(requestUser.getUserName())
+                        .password(passwordEncoder.encode(requestUser.getPassword()))
+                        .roles(requestUser.isRoles()?"ADMIN":"USER")
                         .build();
 
-//                UserDetails admin = User.withUsername(requestUser.getFirstname())
-//                        .password(passwordEncoder.encode(requestUser.getPassword()))
-//                        .roles(requestUser.getRole())
-//                        .build();
-
-//                return username.equals("admin") ? admin : user;
                 return user;
             }
         };
@@ -65,8 +59,9 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeRequests()
 //                .antMatchers("/**").permitAll()
-                .antMatchers("/user/**").permitAll()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/user/admin/**","/user/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/user/signup","/login").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
