@@ -7,4 +7,6 @@ public interface LikeRepository extends JpaRepository<Like,Long> {
 
     public void deleteByUserIdAndTweetId(Long userId, Long postId);
     public Like findByUserId(Long userId);
+
+    public Like findByUserIdAndTweetId(Long userId, Long postId);
 }
