@@ -45,7 +45,7 @@ public class WebSecurityConfig {
 
                 UserDetails user = User.withUsername("foo")
                         .password(passwordEncoder.encode("bar"))
-                        .roles("USER")
+                        .roles("ADMIN")
                         .build();
 
 //                UserDetails admin = User.withUsername(requestUser.getFirstname())

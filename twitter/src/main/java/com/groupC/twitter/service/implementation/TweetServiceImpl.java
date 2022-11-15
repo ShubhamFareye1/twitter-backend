@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.jws.soap.SOAPBinding;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,7 +53,9 @@ public class TweetServiceImpl implements TweetService {
 //        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         User user = userRepository.findById(userId).get();
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
+        tweet.setPostedUserId(userId);
         tweet.setCreatedUser(user);
+        tweet.setPostedUser(user);
         List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
 //        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
@@ -84,7 +83,9 @@ public class TweetServiceImpl implements TweetService {
 
         User user = userRepository.findById(tweetdto.getCreatedUserId()).get();
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
+        tweet.setPostedUserId(tweetdto.getCreatedUserId());
         tweet.setCreatedUser(user);
+        tweet.setPostedUser(user);
         List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
 //        Optional.ofNullable(this.hashtagService.getHashtagsByNames(tweetdto.getHashtags()))
@@ -105,11 +106,25 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
+    @Transactional
+    public TweetDto reTweet(TweetDto tweetdto, Long userId) {
+        User user = userRepository.findById(userId).get();
+        Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
+        tweet.setTweetId(0);
+        tweet.setPostedUserId(userId);
+        tweet.setPostedUser(user);
+        tweet.setCreatedUser(userRepository.findById(tweetdto.getCreatedUserId()).get());
+        tweet.incrementRepostCount();
+        tweet.setCreatedDate(new Date());
+        Tweet finalTweet = tweetRepository.save(tweet);
+        return modelMapper.map(finalTweet,TweetDto.class);
+    }
+
+    @Override
     public TweetDto updateTweet(TweetDto tweetdto) {
 
         User user = userRepository.findById(tweetdto.getCreatedUserId()).get();
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
-        tweet.setCreatedUser(user);
 //        List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
         return this.modelMapper.map(newTweet,TweetDto.class);
@@ -149,7 +164,7 @@ public class TweetServiceImpl implements TweetService {
 
 //        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User ID is not found"));
         userService.getUser(userId);
-        List<Tweet>tweets = this.tweetRepository.findByCreatedUserIdOrderByCreatedDateDesc(userId);
+        List<Tweet>tweets = this.tweetRepository.findByPostedUserIdOrderByCreatedDateDesc(userId);
 
         List<TweetDto> tweetDtos = tweets.stream().map((tweet)->this.modelMapper.map(tweet,TweetDto.class))
                 .collect(Collectors.toList());
@@ -162,7 +177,7 @@ public class TweetServiceImpl implements TweetService {
 
         List<TweetDto> tweets = new ArrayList<>();
         tweets.addAll(getTweetsByUser(userId));
-        Optional.ofNullable(userService.getFollowers(userId)).ifPresent(
+        Optional.ofNullable(userService.getFollowings(userId)).ifPresent(
                 followers->{
                     followers.forEach(
                             user->{

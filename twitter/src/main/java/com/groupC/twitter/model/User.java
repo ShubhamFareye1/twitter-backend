@@ -2,9 +2,7 @@ package com.groupC.twitter.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.util.*;
 
 enum Role{USER,ADMIN}
@@ -36,9 +34,6 @@ public class User {
     private Role roles;
 
     private String avatar;
-
-//    @Column(unique = true) @Email
-//    private String email;
 
     @Column(columnDefinition = "integer default 0")
     private int numberOfFollower;

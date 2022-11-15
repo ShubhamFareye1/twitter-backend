@@ -15,5 +15,7 @@ public interface TweetRepository extends JpaRepository<Tweet,Long> {
 
    @Query("select p from Tweet p where p.text like :key")
    public List<Tweet> searchByText(@Param("key") String text);
+
+   public List<Tweet> findByPostedUserIdOrderByCreatedDateDesc(Long postedUserId);
    
 }
