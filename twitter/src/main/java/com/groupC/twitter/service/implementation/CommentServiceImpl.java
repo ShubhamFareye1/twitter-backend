@@ -83,7 +83,8 @@ public class CommentServiceImpl implements CommentService {
         Notification notification = new Notification();
         notification.setMsg(userDto.getUserName() +" comment on your tweet");
         notification.setUserId(tweetDto.getCreatedUserId());
-        //notification.setUser(tweetDto.getCreatedUser());
+        notification.setTweetId(tweetDto.getTweetId());
+        notification.setUser(tweetDto.getCreatedUser());
         notificationRepository.save(notification);
         return newCommentDto;
     }

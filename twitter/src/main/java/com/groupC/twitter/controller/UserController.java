@@ -87,19 +87,25 @@ public class UserController {
     public ResponseEntity getBookmark(@PathVariable("userId") long userId){
         return new ResponseEntity(userService.getBookmarks(userId),HttpStatus.OK);
     }
+    // user can request for blue tick
     @PutMapping("/bluetick/{userId}")
     public ResponseEntity requestBluetick(@PathVariable("userId") long userId){
         userService.requestBluetick(userId);
         return new ResponseEntity("Blue tick requested",HttpStatus.OK);
     }
+
+    // admin can see all blue tick request using this api
     @GetMapping("/bluetick")
     public ResponseEntity bluetickRequest(){
         return new ResponseEntity(userService.getRequestBluetick(),HttpStatus.OK);
     }
-    @PutMapping("/bluetick")
+
+    // admin can update the status of user bluetick request.
+    @PutMapping("/bluetick/status/{userId}")
     public ResponseEntity bluetick(@PathVariable("userId") long userId){
         return new ResponseEntity(userService.setBluetick(userId),HttpStatus.OK);
     }
+
     @GetMapping("/notification/{userId}")
     public ResponseEntity notification(@PathVariable("userId") long userId){
         return new ResponseEntity(notificationService.getNotification(userId),HttpStatus.OK);

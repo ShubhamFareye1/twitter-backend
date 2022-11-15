@@ -224,6 +224,7 @@ public class TweetServiceImpl implements TweetService {
         notification.setMsg(user.getUserName() +" like your tweet");
         notification.setUserId(tweet.getCreatedUserId());
         notification.setUser(tweet.getCreatedUser());
+        notification.setTweetId(tweet.getTweetId());
         notificationRepository.save(notification);
         return tweet.getNumberOfLikes();
     }
