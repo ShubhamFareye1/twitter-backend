@@ -57,8 +57,6 @@ class tweetControllerTest {
         }
     }
 
-
-
     @Test
     void postSingleTweet(){
         TweetDto tweetDto= new TweetDto();
@@ -96,7 +94,7 @@ class tweetControllerTest {
     @Test
     void postReTweet(){
         int userId = 1;
-        int tweetId = 1;
+        int tweetId = 5;
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> request = new HttpEntity<String>(headers);
@@ -105,10 +103,10 @@ class tweetControllerTest {
                     HttpMethod.POST,request,String.class);
             assertEquals(response.getStatusCode(), HttpStatus.OK);
         }
-        catch (NoSuchElementException e) {
-            assertEquals("400 : \"this Tweets ID does not exist\"", e.getMessage());
-        }
-        catch (UserNotFoundException e){
+//        catch (NoSuchElementException e) {
+//            assertEquals("400 : \"this Tweets ID does not exist\"", e.getMessage());
+//        }
+        catch (RuntimeException e){
             assertEquals("400 : \"User doesn't exist\"",e.getMessage());
         }
     }
@@ -137,8 +135,8 @@ class tweetControllerTest {
 
     @Test
     void addLike(){
-        int userId = 1;
-        int tweetId = 1;
+        int userId = 8;
+        int tweetId = 25;
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> request = new HttpEntity<String>(headers);
@@ -155,5 +153,24 @@ class tweetControllerTest {
         }
     }
 
+    @Test
+    void removeLike(){
+        int userId = 8;
+        int tweetId = 25;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> request = new HttpEntity<String>(headers);
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(baseUrl+"/user/"+userId+"/tweets/"+tweetId,
+                    HttpMethod.DELETE,request,String.class);
+            assertEquals(response.getStatusCode(), HttpStatus.OK);
+        }
+        catch (UserNotFoundException e){
+            assertEquals("400 : \"User doesn't exist\"",e.getMessage());
+        }
+        catch (RuntimeException e){
+            assertEquals("400 : \"this Tweets ID does not exist\"", e.getMessage());
+        }
+    }
 
 }

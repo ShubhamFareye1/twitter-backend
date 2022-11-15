@@ -127,7 +127,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public TweetDto updateTweet(TweetDto tweetdto) {
 
-        User user = userRepository.findById(tweetdto.getCreatedUserId()).get();
+        this.userRepository.findById(tweetdto.getCreatedUserId()).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
         Tweet tweet = this.modelMapper.map(tweetdto,Tweet.class);
 //        List<Hashtagpost> hashtagposts = new ArrayList<>();
         Tweet newTweet = this.tweetRepository.save(tweet);
@@ -138,7 +138,7 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public void deleteTweet(Long tweetId) {
 
-//        this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
+        this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
         getTweetById(tweetId);
         this.tweetRepository.deleteById(tweetId);
     }
@@ -166,7 +166,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public List<TweetDto> getTweetsByUser(long userId) {
 
-        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
+        this.userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
         userService.getUser(userId);
         List<Tweet>tweets = this.tweetRepository.findByPostedUserIdOrderByCreatedDateDesc(userId);
 
@@ -205,8 +205,9 @@ public class TweetServiceImpl implements TweetService {
     @Transactional
     public int addLike(long tweetId, long userId) {
         Tweet tweet = this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
-        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
-        Like like = this.likeRepository.findByUserId(userId);
+        this.userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
+
+//        Like like = this.likeRepository.findByUserId(userId);
 //        if(like.getLikeId()>0){
 //            throw new UserNameAlredyExistException( HttpStatus.BAD_REQUEST,"You're already like this post before");
 //        }
@@ -231,10 +232,11 @@ public class TweetServiceImpl implements TweetService {
     @Override
     @Transactional
     public int removeLike(long tweetId, long userId) {
+
         Tweet tweet = this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
-        this.userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User doesn't exist"));
-        Like like = this.likeRepository.findByUserId(userId);
-        this.likeRepository.findById(like.getLikeId()).orElseThrow(()->new NoSuchElementException("you're not like this post before"));
+        this.userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
+//        Like like = this.likeRepository.findByUserId(userId);
+//        this.likeRepository.findById(like.getLikeId()).orElseThrow(()->new NoSuchElementException("you're not like this post before"));
         tweet.decrementLikeCount();
         User user = modelMapper.map(userService.getUser(userId),User.class);
         likeRepository.deleteByUserIdAndTweetId(userId,tweetId);

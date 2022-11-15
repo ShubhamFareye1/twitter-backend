@@ -17,7 +17,7 @@ public class NotificationServiceImpl implements NotificationService {
     NotificationRepository notificationRepository;
     @Override
     public List<String> getNotification(long userId) {
-        List<String> notificationList =  notificationRepository.getMsgByUserId(userId);
+        List<String> notificationList =  notificationRepository.findMsgByUserId(userId);
         return notificationList;
     }
 }
