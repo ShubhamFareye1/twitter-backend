@@ -4,10 +4,10 @@ import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.User;
 import com.groupC.twitter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.configurers.UrlAuthorizationConfigurer;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,8 +17,9 @@ public class HomeController {
 
     @Autowired
     public UserService userService;
-    @GetMapping("/")
-    public List<UserDto> homePage(){
-        return userService.getAllUsers();
+
+    @PostMapping("/signup")
+    public ResponseEntity signup(@RequestBody UserDto user){
+        return new ResponseEntity(userService.addUser(user), HttpStatus.OK);
     }
 }
