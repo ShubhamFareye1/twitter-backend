@@ -1,8 +1,8 @@
 package com.groupC.twitter.controller;
 
 import com.groupC.twitter.dto.BookmarkDto;
+import com.groupC.twitter.dto.MessagesDto;
 import com.groupC.twitter.dto.UserDto;
-import com.groupC.twitter.repository.NotificationRepository;
 import com.groupC.twitter.service.NotificationService;
 import com.groupC.twitter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class UserController {
 
     @Autowired
     NotificationService notificationService;
-    @PostMapping("")
+    @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody UserDto user){
         return new ResponseEntity(userService.addUser(user), HttpStatus.OK);
     }
@@ -95,13 +95,13 @@ public class UserController {
     }
 
     // admin can see all blue tick request using this api
-    @GetMapping("/bluetick")
+    @GetMapping("/admin/bluetick")
     public ResponseEntity bluetickRequest(){
         return new ResponseEntity(userService.getRequestBluetick(),HttpStatus.OK);
     }
 
     // admin can update the status of user bluetick request.
-    @PutMapping("/bluetick/status/{userId}")
+    @PutMapping("/admin/bluetick/status/{userId}")
     public ResponseEntity bluetick(@PathVariable("userId") long userId){
         return new ResponseEntity(userService.setBluetick(userId),HttpStatus.OK);
     }
@@ -110,4 +110,14 @@ public class UserController {
     public ResponseEntity notification(@PathVariable("userId") long userId){
         return new ResponseEntity(notificationService.getNotification(userId),HttpStatus.OK);
     }
+    @PostMapping("/message")
+    public ResponseEntity userMessage(@RequestBody MessagesDto messagesDto){
+        return new ResponseEntity(userService.addMessage(messagesDto),HttpStatus.OK);
+    }
+
+    @GetMapping("/message/{senderId}/{recieverId}")
+    public ResponseEntity getUserMessage(@PathVariable("senderId") long senderId , @PathVariable("recieverId") long recieverId){
+        return new ResponseEntity(userService.getMessage(senderId,recieverId),HttpStatus.OK);
+    }
+
 }

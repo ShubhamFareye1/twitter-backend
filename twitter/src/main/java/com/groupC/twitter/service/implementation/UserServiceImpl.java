@@ -1,13 +1,16 @@
 package com.groupC.twitter.service.implementation;
 
 import com.groupC.twitter.dto.BookmarkDto;
+import com.groupC.twitter.dto.MessagesDto;
 import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.exceptions.UserNameAlredyExistException;
 import com.groupC.twitter.exceptions.UserNotFoundException;
 import com.groupC.twitter.model.Bookmark;
+import com.groupC.twitter.model.Messages;
 import com.groupC.twitter.model.Tweet;
 import com.groupC.twitter.model.User;
 import com.groupC.twitter.repository.BookmarkRepository;
+import com.groupC.twitter.repository.MessageRepository;
 import com.groupC.twitter.repository.TweetRepository;
 import com.groupC.twitter.repository.UserRepository;
 import com.groupC.twitter.service.UserService;
@@ -32,6 +35,9 @@ public class UserServiceImpl implements UserService {
     private TweetRepository tweetRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private MessageRepository messageRepository;
     @Override
     public UserDto getUser(long userId){
         this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.BAD_REQUEST,"User doesn't exist"));
@@ -194,6 +200,24 @@ public class UserServiceImpl implements UserService {
         user.setIsVerified(3);
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public List<MessagesDto> addMessage(MessagesDto messagesDto) {
+        Messages messages = modelMapper.map( messagesDto,Messages.class);
+        messageRepository.save(messages);
+        List<Messages> messageList = messageRepository.findBySenderIdAndRecieverId(messagesDto.getSenderId(),messagesDto.getRecieverId());
+        List<MessagesDto> request = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
+                .collect(Collectors.toList());
+        return request;
+    }
+
+    @Override
+    public List<MessagesDto> getMessage(long senderId, long recieverId) {
+        List<Messages> messageList = messageRepository.findBySenderIdAndRecieverId(senderId,recieverId);
+        List<MessagesDto> request = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
+                .collect(Collectors.toList());
+        return request;
     }
 
 
