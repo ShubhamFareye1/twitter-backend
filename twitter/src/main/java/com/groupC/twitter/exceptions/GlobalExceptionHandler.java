@@ -29,6 +29,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> userAlreadyExistsException(UserNameAlredyExistException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> runtimeException(RuntimeException ex){
+        System.out.println("Runtime exception");
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> runtimeException(RuntimeException ex){

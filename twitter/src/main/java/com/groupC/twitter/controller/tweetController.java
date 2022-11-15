@@ -42,9 +42,9 @@ public class tweetController {
         return new ResponseEntity(tweetService.addTweet(tweetDto),HttpStatus.CREATED);
     }
 
-    @PostMapping("{userId}/retweets")
-    public ResponseEntity retweet(@RequestBody TweetDto tweetDto,@PathVariable("userId") Long id){
-        return new ResponseEntity(tweetService.reTweet(tweetDto,id),HttpStatus.OK);
+    @PostMapping("{userId}/retweets/{tweetId}")
+    public ResponseEntity retweet(@PathVariable("userId") Long userId,@PathVariable("tweetId") Long tweetId){
+        return new ResponseEntity(tweetService.reTweet(userId,tweetId),HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/tweets")

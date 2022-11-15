@@ -10,13 +10,21 @@ public interface UserService {
     public UserDto getUser(long userId);
 
     public List<UserDto> getAllUsers();
+
     public UserDto getUserByUserName(String userName);
+
     public UserDto addUser(UserDto userDto);
+
     public UserDto updateUser(UserDto userDto);
+
     public void deleteUser(long userId);
+
     public boolean addFollower(long followerId, long userId);
+
     public boolean removeFollower(long followerId, long userId);
+
     public List<UserDto> getFollowers(long userId);
+
     public List<UserDto> getFollowings(long userId);
 
     public boolean addFollowing(long userId,long followingId);
