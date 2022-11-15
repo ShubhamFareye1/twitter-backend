@@ -7,4 +7,5 @@ public class NotificationDto {
     private long notificationId;
     private String msg;
     private long userId;
+    private long tweetId;
 }

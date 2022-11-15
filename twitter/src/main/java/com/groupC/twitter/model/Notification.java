@@ -12,6 +12,7 @@ public class Notification {
     private long notificationId;
     private String msg;
     private long userId;
+    private long tweetId;
 
     @ManyToOne
     @JoinColumn(updatable = false,nullable = false)
