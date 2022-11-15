@@ -16,13 +16,13 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/{id}/comments")
-    public ResponseEntity getComments(@PathVariable("id") Long id){
+    @GetMapping("/{tweetId}/comments")
+    public ResponseEntity getComments(@PathVariable("tweetId") Long id){
         return new ResponseEntity(commentService.getTweetsCommets(id), HttpStatus.OK);
     }
 
-    @DeleteMapping("/comments/{id}")
-    public ResponseEntity deleteComment(@PathVariable("id") Long id){
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable("commentId") Long id){
         commentService.deleteComment(id);
         return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
     }
