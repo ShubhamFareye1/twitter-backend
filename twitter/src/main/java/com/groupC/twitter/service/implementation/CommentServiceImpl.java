@@ -14,11 +14,13 @@ import com.groupC.twitter.repository.*;
 import com.groupC.twitter.service.CommentService;
 import com.groupC.twitter.service.TweetService;
 import com.groupC.twitter.service.UserService;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -51,8 +53,12 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDto> getTweetsCommets(long tweetId) {
         tweetService.getTweetById(tweetId);
         List<Comment> comments = commentRepository.findByTweetId(tweetId);
-        List<CommentDto> commentDtos = comments.stream().map(comment -> this.modelMapper.map(comment, CommentDto.class))
-                .collect(Collectors.toList());
+        if(comments.size()>0) {
+            List<CommentDto> commentDtos = comments.stream().map(comment -> this.modelMapper.map(comment, CommentDto.class))
+                    .collect(Collectors.toList());
+            return commentDtos;
+        }
+        List<CommentDto>commentDtos = new ArrayList<>();
         return commentDtos;
     }
 
@@ -68,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto addComment(CommentDto commentDto) {
+    public CommentDto addComment(@NotNull CommentDto commentDto) {
         tweetService.getTweetById(commentDto.getTweetId());
         userService.getUser(commentDto.getUserId());
         Tweet tweet = tweetRepository.getReferenceById(commentDto.getTweetId());
