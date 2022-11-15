@@ -20,12 +20,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<String>(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtimeException(RuntimeException ex){
-        System.out.println("Runtime exception");
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<?> userNotFoundException(UserNotFoundException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
@@ -33,6 +27,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNameAlredyExistException.class)
     public ResponseEntity<?> userAlreadyExistsException(UserNameAlredyExistException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> runtimeException(RuntimeException ex){
+        System.out.println("Runtime exception");
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
