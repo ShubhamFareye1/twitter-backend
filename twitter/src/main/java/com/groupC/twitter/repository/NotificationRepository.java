@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
 
-    public List<String> getNotificationMsg(long userId);
+    public List<String> getMsgByUserId(long userId);
 
 }
