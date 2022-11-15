@@ -20,9 +20,13 @@ public class UserDto {
 
     private Integer isVerified;
 
-    private String roles;
+    private boolean roles;
 
     private String avatar;
+
+    private String bannerImage;
+
+    private String bio;
 
     private int numberOfFollower;
 

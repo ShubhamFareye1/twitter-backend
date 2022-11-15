@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.*;
 
-enum Role{USER,ADMIN}
 @Data
 @Entity
 @Table(name="users")
@@ -32,10 +31,14 @@ public class User {
     @Column(columnDefinition = "integer default 1")
     private Integer isVerified;
 
-
-    private Role roles;
+    @Column(columnDefinition = "boolean default false")
+    private boolean roles;
 
     private String avatar;
+
+    private String bannerImage;
+
+    private String bio;
 
     @Column(columnDefinition = "integer default 0")
     private int numberOfFollower;

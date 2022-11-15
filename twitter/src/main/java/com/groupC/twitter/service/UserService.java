@@ -1,5 +1,6 @@
 package com.groupC.twitter.service;
 import com.groupC.twitter.dto.BookmarkDto;
+import com.groupC.twitter.dto.MessagesDto;
 import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.Bookmark;
 import com.groupC.twitter.model.User;
@@ -40,5 +41,9 @@ public interface UserService {
     public List<UserDto> getRequestBluetick();
 
     public boolean setBluetick(long userId);
+
+    public List<MessagesDto> addMessage(MessagesDto messagesDto);
+
+    public List<MessagesDto> getMessage(long senderId,long recieverId);
 
 }
