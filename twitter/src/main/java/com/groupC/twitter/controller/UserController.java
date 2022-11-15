@@ -20,10 +20,6 @@ public class UserController {
 
     @Autowired
     NotificationService notificationService;
-    @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody UserDto user){
-        return new ResponseEntity(userService.addUser(user), HttpStatus.OK);
-    }
 
     @PutMapping("")
     public ResponseEntity updateUser(@RequestBody UserDto userDto){
