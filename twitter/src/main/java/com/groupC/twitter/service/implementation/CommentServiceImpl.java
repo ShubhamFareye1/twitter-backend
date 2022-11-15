@@ -14,6 +14,7 @@ import com.groupC.twitter.repository.*;
 import com.groupC.twitter.service.CommentService;
 import com.groupC.twitter.service.TweetService;
 import com.groupC.twitter.service.UserService;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto addComment(CommentDto commentDto) {
+    public CommentDto addComment(@NotNull CommentDto commentDto) {
         tweetService.getTweetById(commentDto.getTweetId());
         userService.getUser(commentDto.getUserId());
         Tweet tweet = tweetRepository.getReferenceById(commentDto.getTweetId());
