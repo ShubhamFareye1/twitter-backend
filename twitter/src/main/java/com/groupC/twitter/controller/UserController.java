@@ -100,7 +100,7 @@ public class UserController {
     public ResponseEntity bluetick(@PathVariable("userId") long userId){
         return new ResponseEntity(userService.setBluetick(userId),HttpStatus.OK);
     }
-    @GetMapping("/notification")
+    @GetMapping("/notification/{userId}")
     public ResponseEntity notification(@PathVariable("userId") long userId){
         return new ResponseEntity(notificationService.getNotification(userId),HttpStatus.OK);
     }

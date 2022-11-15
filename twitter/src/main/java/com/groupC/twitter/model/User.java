@@ -29,8 +29,11 @@ public class User {
 
     @CreationTimestamp
     private  Date createdAt;
+//    @Column(columnDefinition = "integer default 1")
+
     @Column(columnDefinition = "integer default 1")
     private Integer isVerified;
+
 
     private Role roles;
 
