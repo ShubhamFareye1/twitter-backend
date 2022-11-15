@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -51,8 +52,12 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDto> getTweetsCommets(long tweetId) {
         tweetService.getTweetById(tweetId);
         List<Comment> comments = commentRepository.findByTweetId(tweetId);
-        List<CommentDto> commentDtos = comments.stream().map(comment -> this.modelMapper.map(comment, CommentDto.class))
-                .collect(Collectors.toList());
+        if(comments.size()>0) {
+            List<CommentDto> commentDtos = comments.stream().map(comment -> this.modelMapper.map(comment, CommentDto.class))
+                    .collect(Collectors.toList());
+            return commentDtos;
+        }
+        List<CommentDto>commentDtos = new ArrayList<>();
         return commentDtos;
     }
 
