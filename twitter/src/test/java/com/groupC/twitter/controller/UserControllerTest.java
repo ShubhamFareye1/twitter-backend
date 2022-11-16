@@ -237,10 +237,40 @@ public class UserControllerTest {
         }
     }
 
+    @Test
+    void getRequestedBluetick(){
+        try {
+            ResponseEntity<String> res = restTemplate.getForEntity(baseUrl+"/user/admin/bluetick", String.class);
+            assertEquals(res.getStatusCode(), HttpStatus.OK);
+        } catch (Exception e) {
+            assertEquals("400 : \"User doesn't exist\"", e.getMessage());
+        }
+    }
 
+    @Test
+    void addBluetickStatus(){
+        int id=3;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> request = new HttpEntity<String>(headers);
+        try {
+            ResponseEntity res = restTemplate.exchange(baseUrl+"/user/admin/bluetick/status/"+id,HttpMethod.PUT,request,String.class);
+            assertEquals(res.getStatusCode(),HttpStatus.OK);
+        }
+        catch (Exception e){
+            assertEquals("400 : \"User doesn't exist\"",e.getMessage());
+        }
+    }
 
-
-
-
+    @Test
+    void getNotification(){
+        int id = 1;
+        try {
+            ResponseEntity<String> res = restTemplate.getForEntity(baseUrl+"/user/notification/"+id, String.class);
+            assertEquals(res.getStatusCode(), HttpStatus.OK);
+        } catch (Exception e) {
+            assertEquals("400 : \"User doesn't exist\"", e.getMessage());
+        }
+    }
 
 }
