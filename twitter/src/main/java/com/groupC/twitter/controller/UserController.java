@@ -105,6 +105,13 @@ public class UserController {
     public ResponseEntity getBookmark(@PathVariable("userId") long userId){
         return new ResponseEntity(userService.getBookmarks(userId),HttpStatus.OK);
     }
+
+    @DeleteMapping("/{userId}/bookmark/{tweetId}")
+    public ResponseEntity removeBookmark(@PathVariable("userId") long userId,@PathVariable("tweetId") long tweetId){
+        userService.removeBookmark(userId,tweetId);
+        return new ResponseEntity("successfully removed",HttpStatus.OK);
+    }
+
     //this api is use for request blue tick for user.
     @PutMapping("/bluetick/{userId}")
     public ResponseEntity requestBluetick(@PathVariable("userId") long userId){

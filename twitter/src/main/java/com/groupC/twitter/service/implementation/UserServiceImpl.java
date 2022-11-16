@@ -198,28 +198,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public List<UserDto> getRequestBluetick() {
-        List<User> requestList =  userRepository.findByIsVerified(2);
-        List<UserDto> request = requestList.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
-                .collect(Collectors.toList());
-       return request;
-    }
-
-    @Override
-    public boolean setBluetick(long userId,boolean resp) {
-        User user=this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
-//        User user = userRepository.getReferenceById(userId);
-        if(resp==true) {
-            user.setIsVerified(3);
-        }
-        else{
-            user.setIsVerified(1);
-        }
-        userRepository.save(user);
-        return true;
-    }
-
 
     @Override
     public List<UserDto> searchUser(String keyword) {
@@ -227,6 +205,13 @@ public class UserServiceImpl implements UserService {
         List<UserDto> userDtos = users.stream().map(user -> modelMapper.map(user,UserDto.class))
                 .collect(Collectors.toList());
         return userDtos;
+    }
+
+    @Override
+    public void removeBookmark(long userId, long tweetId) {
+        if(getBookmark(userId,tweetId)){
+            bookmarkRepository.deleteByUserIdAndTweetId(userId,tweetId);
+        }
     }
 
 
