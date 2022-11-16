@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getRequestBluetick() {
-       List<User> requestList =  userRepository.findByIsVerified(2);
+        List<User> requestList =  userRepository.findByIsVerified(2);
         List<UserDto> request = requestList.stream().map((user1)->this.modelMapper.map(user1,UserDto.class))
                 .collect(Collectors.toList());
        return request;
