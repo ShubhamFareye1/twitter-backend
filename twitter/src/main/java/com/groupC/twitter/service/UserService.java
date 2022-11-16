@@ -48,4 +48,6 @@ public interface UserService {
 
     public List<MessagesDto> getMessage(long senderId,long recieverId);
 
+    public List<UserDto> searchUser(String keyword);
+
 }

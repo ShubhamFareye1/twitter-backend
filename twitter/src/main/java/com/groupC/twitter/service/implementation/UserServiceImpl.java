@@ -228,7 +228,7 @@ public class UserServiceImpl implements UserService {
         messages.setSender(sender);
         messages.setReciever(reciever);
         messageRepository.save(messages);
-        List<Messages> messageList = messageRepository.findBySenderIdAndRecieverId(messagesDto.getSenderId(),messagesDto.getRecieverId());
+        List<Messages> messageList = messageRepository.findBySenderIdRecieverId(messagesDto.getSenderId(),messagesDto.getRecieverId());
         List<MessagesDto> request = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
                 .collect(Collectors.toList());
         return request;
@@ -236,25 +236,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<MessagesDto> getMessage(long senderId, long recieverId) {
-        List<Messages> messageList1 = messageRepository.findBySenderIdAndRecieverId(senderId,recieverId);
-        List<Messages> messagesList2 = messageRepository.findBySenderIdAndRecieverId(recieverId,senderId);
-        List<MessagesDto> request1 = messageList1.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
+        List<Messages> messageList = messageRepository.findBySenderIdRecieverId(senderId,recieverId);
+        List<MessagesDto> request1 = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
                 .collect(Collectors.toList());
-        List<MessagesDto> request2 = messagesList2.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
-                .collect(Collectors.toList());
-        request1.addAll(request2);
-        Collections.sort(request1, new Comparator<MessagesDto>() {
-            @Override public int compare(final MessagesDto o1, final MessagesDto o2) {
-                if (o1.getMessageId() > o2.getMessageId()) {
-                    return 1;
-                } else if (o1.getMessageId() < o2.getMessageId()) {
-                    return -1;
-                }
-                return 0;
-            }
-        });
         System.out.println(request1);
         return request1;
+    }
+
+    @Override
+    public List<UserDto> searchUser(String keyword) {
+        List<User> users = userRepository.searchByName(keyword);
+        List<UserDto> userDtos = users.stream().map(user -> modelMapper.map(user,UserDto.class))
+                .collect(Collectors.toList());
+        return userDtos;
     }
 
 

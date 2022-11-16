@@ -112,17 +112,7 @@ public class UserController {
         return new ResponseEntity("Blue tick requested",HttpStatus.OK);
     }
 
-    // admin can see all blue tick request using this api
-    @GetMapping("/admin/bluetick")
-    public ResponseEntity bluetickRequest(){
-        return new ResponseEntity(userService.getRequestBluetick(),HttpStatus.OK);
-    }
 
-    // admin can update the status of user bluetick request.
-    @PutMapping("/admin/bluetick/status/{userId}/{response}")
-    public ResponseEntity bluetick(@PathVariable("userId") long userId,@PathVariable("response") boolean resp){
-        return new ResponseEntity(userService.setBluetick(userId,resp),HttpStatus.OK);
-    }
 
     //this api is use for getting all the notification of user.
     @GetMapping("/notification/{userId}")
@@ -140,6 +130,11 @@ public class UserController {
     @GetMapping("/message/{senderId}/{recieverId}")
     public ResponseEntity getUserMessage(@PathVariable("senderId") long senderId , @PathVariable("recieverId") long recieverId){
         return new ResponseEntity(userService.getMessage(senderId,recieverId),HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity searchUser(@PathVariable("keyword") String keyword){
+        return new ResponseEntity(userService.searchUser(keyword),HttpStatus.OK);
     }
 
 }
