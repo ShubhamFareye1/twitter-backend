@@ -18,6 +18,11 @@ public class HomeController {
     @Autowired
     public UserService userService;
 
+    @GetMapping("")
+    public  String  homePage(){
+        return "Welcome to SASTA Twitter";
+    }
+
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody UserDto user){
         return new ResponseEntity(userService.addUser(user), HttpStatus.OK);
