@@ -120,21 +120,4 @@ public class UserController {
         return new ResponseEntity(notificationService.getNotification(userId),HttpStatus.OK);
     }
 
-    //this api is use for post the message of user to other user of his list.
-    @PostMapping("/message")
-    public ResponseEntity userMessage(@RequestBody MessagesDto messagesDto){
-        return new ResponseEntity(userService.addMessage(messagesDto),HttpStatus.OK);
-    }
-
-    //this api is use for getting all messages of users to other users.
-    @GetMapping("/message/{senderId}/{recieverId}")
-    public ResponseEntity getUserMessage(@PathVariable("senderId") long senderId , @PathVariable("recieverId") long recieverId){
-        return new ResponseEntity(userService.getMessage(senderId,recieverId),HttpStatus.OK);
-    }
-
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity searchUser(@PathVariable("keyword") String keyword){
-        return new ResponseEntity(userService.searchUser(keyword),HttpStatus.OK);
-    }
-
 }

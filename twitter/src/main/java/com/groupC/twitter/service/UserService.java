@@ -44,9 +44,7 @@ public interface UserService {
 
     public boolean setBluetick(long userId,boolean resp);
 
-    public List<MessagesDto> addMessage(MessagesDto messagesDto);
 
-    public List<MessagesDto> getMessage(long senderId,long recieverId);
 
     public List<UserDto> searchUser(String keyword);
 

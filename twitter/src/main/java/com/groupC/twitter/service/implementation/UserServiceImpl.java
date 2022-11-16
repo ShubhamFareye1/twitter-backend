@@ -220,28 +220,6 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    @Override
-    public List<MessagesDto> addMessage(MessagesDto messagesDto) {
-        Messages messages = modelMapper.map( messagesDto,Messages.class);
-        User sender = userRepository.findById(messages.getSenderId()).get();
-        User reciever = userRepository.findById(messages.getRecieverId()).get();
-        messages.setSender(sender);
-        messages.setReciever(reciever);
-        messageRepository.save(messages);
-        List<Messages> messageList = messageRepository.findBySenderIdRecieverId(messagesDto.getSenderId(),messagesDto.getRecieverId());
-        List<MessagesDto> request = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
-                .collect(Collectors.toList());
-        return request;
-    }
-
-    @Override
-    public List<MessagesDto> getMessage(long senderId, long recieverId) {
-        List<Messages> messageList = messageRepository.findBySenderIdRecieverId(senderId,recieverId);
-        List<MessagesDto> request1 = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
-                .collect(Collectors.toList());
-        System.out.println(request1);
-        return request1;
-    }
 
     @Override
     public List<UserDto> searchUser(String keyword) {
