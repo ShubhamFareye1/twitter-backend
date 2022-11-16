@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -234,10 +236,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<MessagesDto> getMessage(long senderId, long recieverId) {
-        List<Messages> messageList = messageRepository.findBySenderIdAndRecieverId(senderId,recieverId);
-        List<MessagesDto> request = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
+        List<Messages> messageList1 = messageRepository.findBySenderIdAndRecieverId(senderId,recieverId);
+        List<Messages> messagesList2 = messageRepository.findBySenderIdAndRecieverId(recieverId,senderId);
+        List<MessagesDto> request1 = messageList1.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
                 .collect(Collectors.toList());
-        return request;
+        List<MessagesDto> request2 = messagesList2.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))
+                .collect(Collectors.toList());
+        request1.addAll(request2);
+        Collections.sort(request1, new Comparator<MessagesDto>() {
+            @Override public int compare(final MessagesDto o1, final MessagesDto o2) {
+                if (o1.getMessageId() > o2.getMessageId()) {
+                    return 1;
+                } else if (o1.getMessageId() < o2.getMessageId()) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        System.out.println(request1);
+        return request1;
     }
 
 
