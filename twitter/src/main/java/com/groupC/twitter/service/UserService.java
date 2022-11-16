@@ -46,4 +46,6 @@ public interface UserService {
 
 
 
+    public List<UserDto> searchUser(String keyword);
+
 }

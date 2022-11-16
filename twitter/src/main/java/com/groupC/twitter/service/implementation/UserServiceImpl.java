@@ -221,5 +221,13 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public List<UserDto> searchUser(String keyword) {
+        List<User> users = userRepository.searchByName(keyword);
+        List<UserDto> userDtos = users.stream().map(user -> modelMapper.map(user,UserDto.class))
+                .collect(Collectors.toList());
+        return userDtos;
+    }
+
 
 }
