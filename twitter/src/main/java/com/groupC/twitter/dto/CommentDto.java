@@ -1,4 +1,5 @@
 package com.groupC.twitter.dto;
+import com.groupC.twitter.model.User;
 import lombok.Data;
 import java.util.Date;
 
@@ -15,4 +16,6 @@ public class CommentDto {
     private long tweetId;
 
     private Date commentedAt;
+
+    private User user;
 }

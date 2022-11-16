@@ -113,7 +113,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public List<UserDto> getFollowers(long userId) {
         this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
@@ -125,7 +124,6 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    @Transactional
     public List<UserDto> getFollowings(long userId) {
         this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
@@ -136,6 +134,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean addFollowing(long userId, long followingId) {
         this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         this.userRepository.findById(followingId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
@@ -148,6 +147,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean deleteFollowing(long userId, long followingId) {
         this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         this.userRepository.findById(followingId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
@@ -221,6 +221,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<MessagesDto> addMessage(MessagesDto messagesDto) {
         Messages messages = modelMapper.map( messagesDto,Messages.class);
+        User sender = userRepository.findById(messages.getSenderId()).get();
+        User reciever = userRepository.findById(messages.getRecieverId()).get();
+        messages.setSender(sender);
+        messages.setReciever(reciever);
         messageRepository.save(messages);
         List<Messages> messageList = messageRepository.findBySenderIdAndRecieverId(messagesDto.getSenderId(),messagesDto.getRecieverId());
         List<MessagesDto> request = messageList.stream().map((message)->this.modelMapper.map(message,MessagesDto.class))

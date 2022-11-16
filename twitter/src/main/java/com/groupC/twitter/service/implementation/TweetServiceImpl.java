@@ -180,7 +180,6 @@ public class TweetServiceImpl implements TweetService {
         UserDto userDto = userService.getUser(userId);
 
         List<TweetDto> tweets = new ArrayList<>();
-        tweets.addAll(getTweetsByUser(userId));
         Optional.ofNullable(userService.getFollowings(userId)).ifPresent(
                 followers->{
                     followers.forEach(
@@ -190,6 +189,21 @@ public class TweetServiceImpl implements TweetService {
                     );
                 }
         );
+        tweets.addAll(getTweetsByUser(userId));
+
+        Collections.sort(tweets, new Comparator<TweetDto>() {
+            @Override public int compare(final TweetDto o1, final TweetDto o2) {
+                if (o1.getTweetId() > o2.getTweetId()) {
+                    return -1;
+                } else if (o1.getTweetId() < o2.getTweetId()) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+
+
+
         return tweets;
     }
 
