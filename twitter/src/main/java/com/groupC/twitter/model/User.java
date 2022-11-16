@@ -28,10 +28,10 @@ public class User {
     private  Date createdAt;
 //    @Column(columnDefinition = "integer default 1")
 
-    @Column(columnDefinition = "integer default 1")
+    @Column(columnDefinition = "integer default 1",nullable = false)
     private Integer isVerified;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false",nullable = false)
     private boolean roles;
 
     private String avatar;
@@ -40,10 +40,10 @@ public class User {
 
     private String bio;
 
-    @Column(columnDefinition = "integer default 0")
+    @Column(columnDefinition = "integer default 0",nullable = false)
     private int numberOfFollower;
 
-    @Column(columnDefinition = "integer default 0")
+    @Column(columnDefinition = "integer default 0",nullable = false)
     private int numberOfFollowing;
 
     @ElementCollection

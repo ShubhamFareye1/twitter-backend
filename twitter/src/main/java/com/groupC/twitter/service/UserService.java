@@ -32,6 +32,8 @@ public interface UserService {
 
     public boolean deleteFollowing(long userId,long followingId);
 
+    public boolean getBookmark(long userId,long tweetId);
+
     public List<BookmarkDto> getBookmarks(long userId);
 
     public BookmarkDto addBookmark(BookmarkDto bookmarkDto);
@@ -40,7 +42,7 @@ public interface UserService {
 
     public List<UserDto> getRequestBluetick();
 
-    public boolean setBluetick(long userId);
+    public boolean setBluetick(long userId,boolean resp);
 
     public List<MessagesDto> addMessage(MessagesDto messagesDto);
 
