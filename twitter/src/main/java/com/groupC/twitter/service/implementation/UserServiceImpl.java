@@ -158,6 +158,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean getBookmark(long userId, long tweetId) {
+        List<Bookmark> bookmarks  =bookmarkRepository.findByUserIdAndTweetId(userId,tweetId);
+        if(bookmarks.size()>0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
     public List<BookmarkDto> getBookmarks(long userId){
         this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         List<Bookmark> bookmarks = bookmarkRepository.findByUserId(userId);
@@ -194,10 +205,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean setBluetick(long userId) {
-        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
-        User user = userRepository.getReferenceById(userId);
-        user.setIsVerified(3);
+    public boolean setBluetick(long userId,boolean resp) {
+        User user=this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
+//        User user = userRepository.getReferenceById(userId);
+        if(resp==true) {
+            user.setIsVerified(3);
+        }
+        else{
+            user.setIsVerified(1);
+        }
         userRepository.save(user);
         return true;
     }

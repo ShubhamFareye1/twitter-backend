@@ -83,7 +83,14 @@ public class UserController {
         return new ResponseEntity(userService.getFollowings(userId),HttpStatus.OK);
     }
 
+
     //this api is use for add following of user.
+    @GetMapping("/{userId}/bookmark/{tweetId}")
+    public ResponseEntity getBookmark(@PathVariable("userId") long userId,@PathVariable("tweetId") long tweetId){
+        return new ResponseEntity(userService.getBookmark(userId,tweetId),HttpStatus.OK);
+    }
+
+
     @PostMapping("/following/{userId}/{followingId}")
     public ResponseEntity addFollowing(@PathVariable("userId") long userId,@PathVariable("followingId") long followingId){
         return new ResponseEntity(userService.addFollowing(userId,followingId),HttpStatus.OK);
@@ -112,9 +119,9 @@ public class UserController {
     }
 
     // admin can update the status of user bluetick request.
-    @PutMapping("/admin/bluetick/status/{userId}")
-    public ResponseEntity bluetick(@PathVariable("userId") long userId){
-        return new ResponseEntity(userService.setBluetick(userId),HttpStatus.OK);
+    @PutMapping("/admin/bluetick/status/{userId}/{response}")
+    public ResponseEntity bluetick(@PathVariable("userId") long userId,@PathVariable("response") boolean resp){
+        return new ResponseEntity(userService.setBluetick(userId,resp),HttpStatus.OK);
     }
 
     //this api is use for getting all the notification of user.

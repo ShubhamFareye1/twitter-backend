@@ -201,6 +201,14 @@ public class TweetServiceImpl implements TweetService {
         return tweetDtos;
     }
 
+    public boolean getLike(long tweetId, long userId){
+        List<Like> like = likeRepository.findByUserIdAndTweetId(userId,tweetId);
+        if(like.size()>0)
+            return true;
+        else
+            return false;
+    }
+
     @Override
     @Transactional
     public int addLike(long tweetId, long userId) {

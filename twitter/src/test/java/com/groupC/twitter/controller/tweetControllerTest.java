@@ -16,6 +16,12 @@ class tweetControllerTest {
     RestTemplate restTemplate = new RestTemplate();
     String baseUrl = "http://localhost:8080";
 
+
+    @Test
+    void login(){
+
+    }
+
     @Test
     void getSingleTweet() {
         int id = 1;
@@ -130,6 +136,14 @@ class tweetControllerTest {
     void searchTweet(){
         String keyword = "this";
         ResponseEntity<String> response = restTemplate.getForEntity(baseUrl+"/user/tweets/search/"+keyword, String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+    }
+
+    @Test
+    void getLike(){
+        int userId = 8;
+        int tweetId = 25;
+        ResponseEntity<String> response = restTemplate.getForEntity(baseUrl+"/user/"+userId+"/tweets/"+tweetId, String.class);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
 
