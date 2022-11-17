@@ -31,18 +31,10 @@ public interface UserService {
     public boolean addFollowing(long userId,long followingId);
 
     public boolean deleteFollowing(long userId,long followingId);
-
-    public boolean getBookmark(long userId,long tweetId);
-
-    public List<BookmarkDto> getBookmarks(long userId);
-
-    public BookmarkDto addBookmark(BookmarkDto bookmarkDto);
+    public List<UserDto> topTenUser();
 
     public void requestBluetick(long userId);
 
-
-
     public List<UserDto> searchUser(String keyword);
 
-    public void removeBookmark(long userId, long tweetId);
 }

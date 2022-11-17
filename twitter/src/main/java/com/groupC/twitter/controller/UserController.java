@@ -83,33 +83,9 @@ public class UserController {
         return new ResponseEntity(userService.getFollowings(userId),HttpStatus.OK);
     }
 
-
-    //this api is use for add following of user.
-    @GetMapping("/{userId}/bookmark/{tweetId}")
-    public ResponseEntity getBookmark(@PathVariable("userId") long userId,@PathVariable("tweetId") long tweetId){
-        return new ResponseEntity(userService.getBookmark(userId,tweetId),HttpStatus.OK);
-    }
-
-
     @PostMapping("/following/{userId}/{followingId}")
     public ResponseEntity addFollowing(@PathVariable("userId") long userId,@PathVariable("followingId") long followingId){
         return new ResponseEntity(userService.addFollowing(userId,followingId),HttpStatus.OK);
-    }
-    //this api is use for add bookmark of user
-    @PostMapping("/bookmark")
-    public ResponseEntity setBookmark(@RequestBody BookmarkDto bookmark){
-        return new ResponseEntity(userService.addBookmark(bookmark),HttpStatus.OK);
-    }
-    // this api is use for fetch all bookmark of user.
-    @GetMapping("/bookmark/{userId}")
-    public ResponseEntity getBookmark(@PathVariable("userId") long userId){
-        return new ResponseEntity(userService.getBookmarks(userId),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{userId}/bookmark/{tweetId}")
-    public ResponseEntity removeBookmark(@PathVariable("userId") long userId,@PathVariable("tweetId") long tweetId){
-        userService.removeBookmark(userId,tweetId);
-        return new ResponseEntity("successfully removed",HttpStatus.OK);
     }
 
     //this api is use for request blue tick for user.
@@ -119,12 +95,20 @@ public class UserController {
         return new ResponseEntity("Blue tick requested",HttpStatus.OK);
     }
 
-
-
     //this api is use for getting all the notification of user.
     @GetMapping("/notification/{userId}")
     public ResponseEntity notification(@PathVariable("userId") long userId){
         return new ResponseEntity(notificationService.getNotification(userId),HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity searchUser(@PathVariable("keyword") String user){
+        return new ResponseEntity<>(userService.searchUser(user),HttpStatus.OK);
+    }
+
+    @GetMapping("/trending")
+    public ResponseEntity topUser(){
+        return new ResponseEntity(userService.topTenUser(),HttpStatus.OK);
     }
 
 }

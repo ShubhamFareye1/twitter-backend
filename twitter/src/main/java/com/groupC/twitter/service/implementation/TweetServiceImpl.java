@@ -39,14 +39,11 @@ public class TweetServiceImpl implements TweetService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private LikeRepository likeRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+
 
     @Override
     @Transactional
@@ -215,55 +212,5 @@ public class TweetServiceImpl implements TweetService {
         return tweetDtos;
     }
 
-    public boolean getLike(long tweetId, long userId){
-        List<Like> like = likeRepository.findByUserIdAndTweetId(userId,tweetId);
-        if(like.size()>0)
-            return true;
-        else
-            return false;
-    }
-
-    @Override
-    @Transactional
-    public int addLike(long tweetId, long userId) {
-        Tweet tweet = this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
-        this.userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
-
-//        Like like = this.likeRepository.findByUserId(userId);
-//        if(like.getLikeId()>0){
-//            throw new UserNameAlredyExistException( HttpStatus.BAD_REQUEST,"You're already like this post before");
-//        }
-        tweet.incrementLikeCount();
-        User user = modelMapper.map(userService.getUser(userId),User.class);
-        Like likeMapping = new Like();
-        likeMapping.setTweetId(tweetId);
-        likeMapping.setUserId(userId);
-        likeMapping.setUser(user);
-        likeMapping.setTweet(tweet);
-        likeRepository.save(likeMapping);
-        tweetRepository.save(tweet);
-        Notification notification = new Notification();
-        notification.setMsg(user.getUserName() +" like your tweet");
-        notification.setUserId(tweet.getCreatedUserId());
-        notification.setUser(tweet.getCreatedUser());
-        notification.setTweetId(tweet.getTweetId());
-        notificationRepository.save(notification);
-        return tweet.getNumberOfLikes();
-    }
-
-    @Override
-    @Transactional
-    public int removeLike(long tweetId, long userId) {
-
-        Tweet tweet = this.tweetRepository.findById(tweetId).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
-        this.userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
-//        Like like = this.likeRepository.findByUserId(userId);
-//        this.likeRepository.findById(like.getLikeId()).orElseThrow(()->new NoSuchElementException("you're not like this post before"));
-        tweet.decrementLikeCount();
-        User user = modelMapper.map(userService.getUser(userId),User.class);
-        likeRepository.deleteByUserIdAndTweetId(userId,tweetId);
-        tweetRepository.save(tweet);
-        return tweet.getNumberOfLikes();
-    }
 
 }

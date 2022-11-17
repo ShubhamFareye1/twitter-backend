@@ -30,11 +30,7 @@ public interface TweetService {
 
     public  List<TweetDto> searchTweets(String keyword);
 
-    public boolean getLike(long tweetId, long userId);
 
-    public int addLike(long tweetId, long userId);
-
-    public  int removeLike(long tweetId, long userId);
 
 
 }
