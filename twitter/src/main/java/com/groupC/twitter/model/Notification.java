@@ -17,4 +17,7 @@ public class Notification {
     @ManyToOne
     @JoinColumn(updatable = false,nullable = false)
     private User user;
+
+    @ManyToOne
+    private User actionUser;
 }
