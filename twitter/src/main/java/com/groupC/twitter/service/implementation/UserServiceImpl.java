@@ -160,37 +160,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean getBookmark(long userId, long tweetId) {
-        List<Bookmark> bookmarks  =bookmarkRepository.findByUserIdAndTweetId(userId,tweetId);
-        if(bookmarks.size()>0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    public List<UserDto> topTenUser() {
+        List<User> users = userRepository.findTop10ByOrderByNumberOfFollowerDesc();
+        List<UserDto>userDtos = users.stream().map(user -> modelMapper.map(user,UserDto.class)).collect(Collectors.toList());
+        return userDtos;
     }
 
-    @Override
-    public List<BookmarkDto> getBookmarks(long userId){
-        this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
-        List<Bookmark> bookmarks = bookmarkRepository.findByUserId(userId);
-        List<BookmarkDto> UserBookmarks = bookmarks.stream().map((bookmark) -> this.modelMapper.map(bookmark,BookmarkDto.class))
-                .collect(Collectors.toList());
-        return UserBookmarks;
-    }
     @Override
     @Transactional
-    public BookmarkDto addBookmark(BookmarkDto bookmarkDto){
-        Bookmark bookmark = modelMapper.map(bookmarkDto,Bookmark.class);
-        User user=this.userRepository.findById(bookmarkDto.getUserId()).orElseThrow(()-> new UserNotFoundException(HttpStatus.NOT_FOUND, "User doesn't exist"));
-        Tweet tweet = this.tweetRepository.findById(bookmarkDto.getTweetId()).orElseThrow(()-> new NoSuchElementException("this Tweets ID does not exist"));
-        bookmark.setUser(user);
-        bookmark.setTweet(tweet);
-        bookmarkRepository.save(bookmark);
-        return modelMapper.map(bookmark,BookmarkDto.class);
-    }
-
-    @Override
     public void requestBluetick(long userId) {
         this.userRepository.findById(userId).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
         User user = userRepository.getReferenceById(userId);
@@ -201,17 +178,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> searchUser(String keyword) {
-        List<User> users = userRepository.searchByName(keyword);
+        List<User> users = userRepository.searchByName("%"+keyword+"%");
         List<UserDto> userDtos = users.stream().map(user -> modelMapper.map(user,UserDto.class))
                 .collect(Collectors.toList());
         return userDtos;
-    }
-
-    @Override
-    public void removeBookmark(long userId, long tweetId) {
-        if(getBookmark(userId,tweetId)){
-            bookmarkRepository.deleteByUserIdAndTweetId(userId,tweetId);
-        }
     }
 
 

@@ -61,19 +61,4 @@ public class TweetController {
         return new ResponseEntity(tweetService.searchTweets(keyword),HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/tweets/{tweetId}")
-    public ResponseEntity getLike(@PathVariable("userId") Long userId,@PathVariable("tweetId") Long tweetId){
-        return new ResponseEntity(tweetService.getLike(tweetId,userId),HttpStatus.OK);
-    }
-
-    @PostMapping("/{userId}/tweets/{tweetId}")
-    public ResponseEntity addLike(@PathVariable("userId") Long userId,@PathVariable("tweetId") Long tweetId){
-        return new ResponseEntity(tweetService.addLike(tweetId,userId),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{userId}/tweets/{tweetId}")
-    public ResponseEntity removeLike(@PathVariable("userId") Long userId,@PathVariable("tweetId") Long tweetId){
-        return new ResponseEntity(tweetService.removeLike(tweetId,userId),HttpStatus.OK);
-    }
-
 }
