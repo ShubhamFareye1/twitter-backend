@@ -1,5 +1,6 @@
 package com.groupC.twitter.dto;
 
+import com.groupC.twitter.model.User;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,4 +12,6 @@ public class MessagesDto {
    private Date messageDate;
    private long senderId;
    private long recieverId;
+   private User sender;
+   private User reciever;
 }

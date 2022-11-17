@@ -73,13 +73,13 @@ public class User {
     @JsonIgnore
     private List<Notification> notifications = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "sender",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    private List<Messages> sendermsgs = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "reciever",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    private List<Messages> recievermsgs = new ArrayList<>();
+    @OneToMany(mappedBy = "sender",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Messages> sendermsgs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reciever",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Messages> recievermsgs = new ArrayList<>();
 
     public void setFollower(final long userId) {
         follower.put(userId, new Date());

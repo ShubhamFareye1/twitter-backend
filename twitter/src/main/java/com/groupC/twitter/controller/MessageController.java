@@ -25,4 +25,9 @@ public class MessageController {
     public ResponseEntity getUserMessage(@PathVariable("senderId") long senderId , @PathVariable("recieverId") long recieverId){
         return new ResponseEntity(messageService.getMessage(senderId,recieverId),HttpStatus.OK);
     }
+
+    @GetMapping("/message/{userId}")
+    public ResponseEntity getUsers(@PathVariable("userId") long userId){
+        return new ResponseEntity(messageService.getMessageUser(userId),HttpStatus.OK);
+    }
 }

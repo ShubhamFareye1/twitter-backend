@@ -138,7 +138,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void removefollowing(){
+     void removefollowing(){
         int userId = 8;
         int followeId = 25;
         HttpHeaders headers = new HttpHeaders();
