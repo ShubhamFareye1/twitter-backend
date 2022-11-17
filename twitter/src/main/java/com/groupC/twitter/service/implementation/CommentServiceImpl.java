@@ -5,6 +5,7 @@ import com.groupC.twitter.dto.TweetDto;
 import com.groupC.twitter.dto.UserDto;
 import com.groupC.twitter.model.Comment;
 import com.groupC.twitter.model.Tweet;
+import com.groupC.twitter.model.User;
 import com.groupC.twitter.repository.CommentRepository;
 import com.groupC.twitter.repository.LikeRepository;
 import com.groupC.twitter.repository.TweetRepository;
@@ -91,6 +92,7 @@ public class CommentServiceImpl implements CommentService {
         notification.setUserId(tweetDto.getCreatedUserId());
         notification.setTweetId(tweetDto.getTweetId());
         notification.setUser(tweetDto.getCreatedUser());
+        notification.setActionUser(modelMapper.map(userDto, User.class));
         notificationRepository.save(notification);
         return newCommentDto;
     }

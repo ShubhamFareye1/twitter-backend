@@ -10,6 +10,6 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
 
     //@Query("select msg from Notification where user_id = :key")
-    public List<Notification> findByUserId(Long userId);
+    public List<Notification> findByUserIdOrderByNotificationIdDesc(Long userId);
 
 }

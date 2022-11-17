@@ -83,6 +83,7 @@ public class LikeServiceImpl implements LikeService {
         notification.setUserId(tweet.getCreatedUserId());
         notification.setUser(tweet.getCreatedUser());
         notification.setTweetId(tweet.getTweetId());
+        notification.setActionUser(user);
         notificationRepository.save(notification);
         return tweet.getNumberOfLikes();
     }
