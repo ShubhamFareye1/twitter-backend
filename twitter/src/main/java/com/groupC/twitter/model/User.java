@@ -28,7 +28,7 @@ public class User {
     private  Date createdAt;
 //    @Column(columnDefinition = "integer default 1")
 
-    @Column(columnDefinition = "integer default 1",nullable = false)
+    @Column(columnDefinition = "integer default 1")
     private Integer isVerified;
 
     @Column(columnDefinition = "boolean default false",nullable = false)
