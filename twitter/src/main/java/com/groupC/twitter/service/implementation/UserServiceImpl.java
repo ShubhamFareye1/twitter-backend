@@ -77,8 +77,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto updateUser(UserDto userDto){
-        User user = this.modelMapper.map(userDto,User.class);
-        this.userRepository.findById(user.getUserId()).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
+//        User user = this.modelMapper.map(userDto,User.class);
+        User user=this.userRepository.findById(userDto.getUserId()).orElseThrow(()->new UserNotFoundException(HttpStatus.NOT_FOUND,"User doesn't exist"));
+        if(userDto.getUserName()!=null)
+            user.setUserName(userDto.getUserName());
+        if(userDto.getPassword()!=null)
+            user.setPassword(userDto.getPassword());
+        if(userDto.getAvatar()!=null)
+            user.setAvatar(userDto.getAvatar());
+        if(userDto.getBannerImage()!=null)
+            user.setAvatar(userDto.getBannerImage());
+        if(userDto.getBio()!=null)
+            user.setBio(user.getBio());
         User updateUser= this.userRepository.save(user);
         return this.modelMapper.map(updateUser,UserDto.class);
     }
