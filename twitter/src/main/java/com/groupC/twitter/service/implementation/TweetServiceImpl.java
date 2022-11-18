@@ -198,9 +198,6 @@ public class TweetServiceImpl implements TweetService {
                 return 0;
             }
         });
-
-
-
         return tweets;
     }
 
