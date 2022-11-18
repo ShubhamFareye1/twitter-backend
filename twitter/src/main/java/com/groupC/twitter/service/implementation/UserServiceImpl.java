@@ -86,9 +86,11 @@ public class UserServiceImpl implements UserService {
         if(userDto.getAvatar()!=null)
             user.setAvatar(userDto.getAvatar());
         if(userDto.getBannerImage()!=null)
-            user.setAvatar(userDto.getBannerImage());
+            user.setBannerImage(userDto.getBannerImage());
         if(userDto.getBio()!=null)
-            user.setBio(user.getBio());
+            user.setBio(userDto.getBio());
+        if(userDto.getName()!=null)
+            user.setName(userDto.getName());
         User updateUser= this.userRepository.save(user);
         return this.modelMapper.map(updateUser,UserDto.class);
     }

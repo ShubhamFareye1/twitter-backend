@@ -29,7 +29,7 @@ public class User {
 //    @Column(columnDefinition = "integer default 1")
 
     @Column(columnDefinition = "integer default 1")
-    private Integer isVerified;
+    private Integer isVerified=1;
 
     @Column(columnDefinition = "boolean default false",nullable = false)
     private boolean roles;

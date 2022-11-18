@@ -18,9 +18,14 @@ public class HomeController {
     @Autowired
     public UserService userService;
 
+//    @GetMapping("")
+//    public  String  homePage(){
+//        return "Welcome to SASTA Twitter";
+//    }
+
     @GetMapping("")
-    public  String  homePage(){
-        return "Welcome to SASTA Twitter";
+    public ResponseEntity userDetails() {
+        return new ResponseEntity(userService.getUser(3), HttpStatus.OK);
     }
 
     @PostMapping("/signup")
