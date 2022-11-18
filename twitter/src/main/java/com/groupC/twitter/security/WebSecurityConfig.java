@@ -59,10 +59,9 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeRequests()
 //                .antMatchers("/**").permitAll()
-
                 .antMatchers("/").permitAll()
-                .antMatchers("/admin/**","/user/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/admin/**","/admin").hasRole("ADMIN")
+//                .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/signup","/login").permitAll()
                 .anyRequest()
                 .authenticated()

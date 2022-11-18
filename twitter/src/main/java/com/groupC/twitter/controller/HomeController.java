@@ -23,6 +23,11 @@ public class HomeController {
         return "Welcome to SASTA Twitter";
     }
 
+//    @GetMapping("")
+//    public ResponseEntity userDetails() {
+//        return new ResponseEntity(userService.getUser(3), HttpStatus.OK);
+//    }
+
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody UserDto user){
         return new ResponseEntity(userService.addUser(user), HttpStatus.OK);
